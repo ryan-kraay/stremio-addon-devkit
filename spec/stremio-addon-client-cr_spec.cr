@@ -1,9 +1,8 @@
 require "./spec_helper"
 
-describe Stremio::Addon::Client::Cr do
-  # TODO: Write tests
+Spectator.describe Stremio::Addon::Client::Cr do
 
   it "works" do
-    false.should eq(true)
+    expect(false).to eq(true)
   end
 end
