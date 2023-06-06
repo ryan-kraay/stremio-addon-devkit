@@ -1,0 +1,9 @@
+name: stremio-addon-client-cr
+version: 0.0.1
+
+authors:
+  - Ryan Kraay <6840071+ryan-kraay@users.noreply.github.com>
+
+crystal: 1.8.2
+
+license: LGPL
