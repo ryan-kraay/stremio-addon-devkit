@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+    branches:
+      - "**"
+
+  pull_request:
+    branches:
+      - "**:**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: 1.8.2  # This needs to be kept in sync with /shards.yml
+          shards: true
+      - run: shards install
+      - run: crystal spec --error-on-warnings
+      - run: crystal spec -Dpreview_mt --error-on-warnings
