@@ -1,4 +1,4 @@
-# stremio-addon-client-cr
+# stremio-addon-server-cr
 
 An opinionated database driven framework to rapidly build Stremio Addons, written in Crystal Lang.
 
@@ -8,8 +8,8 @@ An opinionated database driven framework to rapidly build Stremio Addons, writte
 
    ```yaml
    dependencies:
-     stremio-addon-client-cr:
-       github: ryan-kraay/stremio-addon-client-cr
+     stremio-addon-server-cr:
+       github: ryan-kraay/stremio-addon-server-cr
    ```
 
 2. Run `shards install`
@@ -17,7 +17,7 @@ An opinionated database driven framework to rapidly build Stremio Addons, writte
 ## Usage
 
 ```crystal
-require "stremio-addon-client-cr"
+require "stremio-addon-server-cr"
 ```
 
 TODO: Write usage instructions here
@@ -28,7 +28,7 @@ TODO: Write development instructions here
 
 ## Contributing
 
-1. Fork it (<https://github.com/ryan-kraay/stremio-addon-client-cr/fork>)
+1. Fork it (<https://github.com/ryan-kraay/stremio-addon-server-cr/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
