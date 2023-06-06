@@ -1,2 +1,2 @@
-require "../src/stremio-addon-client-cr"
+require "../src/stremio-addon-server"
 require "spectator"

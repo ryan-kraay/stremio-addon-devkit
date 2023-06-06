@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-Spectator.describe Stremio::Addon::Client::Cr do
+Spectator.describe Stremio::Addon::Server do
 
   it "works" do
     expect(false).to eq(false)
