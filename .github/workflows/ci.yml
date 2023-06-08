@@ -12,14 +12,19 @@ on:
       - "**:**"
 
 jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        crystal: [1.8.2, latest]  # This needs to be kept in sync with /shards.yml
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.8.2  # This needs to be kept in sync with /shards.yml
+          crystal: ${{ matrix.crystal }}
           shards: true
       - run: shards install
-      - run: crystal spec --error-on-warnings
-      - run: crystal spec -Dpreview_mt --error-on-warnings
+      - run: crystal spec --order=random --error-on-warnings
+      - run: crystal spec -Dpreview_mt --order=random --error-on-warnings
