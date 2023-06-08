@@ -11,6 +11,9 @@ on:
     branches:
       - "**:**"
 
+  schedule:
+    - cron: '0 6 * * 6'
+
 jobs:
   test:
     strategy:
@@ -26,6 +29,15 @@ jobs:
         with:
           crystal: ${{ matrix.crystal }}
           shards: true
-      - run: shards install
+      - name: Check Formatting
+        run: crystal tool format --check
+      - name: Cache shards
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/shards
+          key: ${{ runner.os }}-shards-${{ hashFiles('shard.yml') }}
+          restore-keys: ${{ runner.os }}-shards-
+      - name: Install shards
+        run: shards update
       - run: crystal spec --order=random --error-on-warnings
       - run: crystal spec -Dpreview_mt --order=random --error-on-warnings
