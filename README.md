@@ -3,7 +3,7 @@
     <img width="300" src="https://raw.githubusercontent.com/ryan-kraay/stremio-addon-server-cr/master/assets/logo.png" alt="Logo">
   </a>
   
-  <h1>The Unofficial Crystal Stremio Addon SDK</h1>
+  <h1>The Unofficial Stremio Addon SDK for Crystal</h1>
   
   <p>
     <a href="https://github.com/ryan-kraay/stremio-addon-server-cr/actions/workflows/ci.yml">
@@ -12,7 +12,7 @@
     <a href="https://github.com/ryan-kraay/stremio-addon-server-cr/blob/main/LICENSE">
       <img src="https://img.shields.io/github/license/ryan-kraay/stremio-addon-server-cr.svg" alt="License">
     </a>
-    <a href="https://naqvis.github.io/wasmer-crystal/index.html">
+    <a href="https://ryan-kraay.github.io/stremio-addon-server-cr/index.html">
       <img src="https://img.shields.io/badge/documentation-API-f06" alt="API Documentation">
     </a> 
   </p>
