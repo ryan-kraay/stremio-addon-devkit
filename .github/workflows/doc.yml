@@ -28,7 +28,7 @@ jobs:
         if: github.event_name == 'push' # DEBUG
         uses: JamesIves/github-pages-deploy-action@v4.4.2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.TOKEN }}
           branch: gh-pages
           folder: docs
           single-commit: true
