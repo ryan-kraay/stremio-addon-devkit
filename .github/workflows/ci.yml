@@ -12,12 +12,11 @@ on:
       - "**:**"
 
 jobs:
-  build:
+  test:
     strategy:
       fail-fast: false
       matrix:
         crystal: [1.8.2, latest]  # This needs to be kept in sync with /shards.yml
-  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
