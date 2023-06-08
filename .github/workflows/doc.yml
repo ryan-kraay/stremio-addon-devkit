@@ -1,9 +1,9 @@
 name: DOC
 
 on:
-  push:
-    branches:
-      - "**"
+#  push: # DEBUG
+#    branches:
+#      - "**"
   pull_request:
     branches: [ main ]
 jobs:
@@ -24,8 +24,8 @@ jobs:
       - name: Generate docs
         run: crystal doc
       - name: Deploy
-        #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        if: github.event_name == 'push' # DEBUG
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        #if: github.event_name == 'push' # DEBUG
         uses: JamesIves/github-pages-deploy-action@v4.4.2
         with:
           token: ${{ secrets.TOKEN }}
