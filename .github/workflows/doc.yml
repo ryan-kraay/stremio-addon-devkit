@@ -25,11 +25,12 @@ jobs:
         run: crystal doc
       - name: Deploy
         #if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' # DEBUG
         uses: JamesIves/github-pages-deploy-action@v4.4.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
           folder: docs
           single-commit: true
-          dry-run: true
+          git-config-name: Doc-U-Bot
+          # dry-run: true  # DEBUG
