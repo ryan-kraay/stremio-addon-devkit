@@ -1,0 +1,36 @@
+name: DOC
+
+on:
+#  push: # DEBUG
+#    branches:
+#      - "**"
+  pull_request:
+    branches: [ main ]
+jobs:
+  build:
+    name: Doc
+    timeout-minutes: 30
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download source
+        uses: actions/checkout@v3
+      - name: Install Crystal ${{ matrix.crystal }}
+        uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: latest
+          shards: false
+      - name: Generate docs
+        run: crystal doc
+      - name: Deploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        #if: github.event_name == 'push' # DEBUG
+        uses: JamesIves/github-pages-deploy-action@v4.4.2
+        with:
+          token: ${{ secrets.TOKEN }}
+          branch: gh-pages
+          folder: docs
+          single-commit: true
+          git-config-name: Doc-U-Bot
+          # dry-run: true  # DEBUG

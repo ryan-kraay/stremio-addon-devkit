@@ -11,15 +11,33 @@ on:
     branches:
       - "**:**"
 
+  schedule:
+    - cron: '0 6 * * 6'
+
 jobs:
   test:
+    strategy:
+      fail-fast: false
+      matrix:
+        crystal: [1.8.2, latest]  # This needs to be kept in sync with /shards.yml
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: crystal-lang/install-crystal@v1
+      - name: Download source
+        uses: actions/checkout@v3
+      - name: Install Crystal ${{ matrix.crystal }}
+        uses: crystal-lang/install-crystal@v1
         with:
-          crystal: 1.8.2  # This needs to be kept in sync with /shards.yml
+          crystal: ${{ matrix.crystal }}
           shards: true
-      - run: shards install
-      - run: crystal spec --error-on-warnings
-      - run: crystal spec -Dpreview_mt --error-on-warnings
+      - name: Check Formatting
+        run: crystal tool format --check
+      - name: Cache shards
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/shards
+          key: ${{ runner.os }}-shards-${{ hashFiles('shard.yml') }}
+          restore-keys: ${{ runner.os }}-shards-
+      - name: Install shards
+        run: shards update
+      - run: crystal spec --order=random --error-on-warnings
+      - run: crystal spec -Dpreview_mt --order=random --error-on-warnings

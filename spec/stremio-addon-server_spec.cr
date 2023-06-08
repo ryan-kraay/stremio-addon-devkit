@@ -1,7 +1,6 @@
 require "./spec_helper"
 
 Spectator.describe Stremio::Addon::Server do
-
   let(addon) { Stremio::Addon::SQLite3.new DB.open("sqlite3:?journal_mode=wal&synchronous=normal") }
 
   before_each {

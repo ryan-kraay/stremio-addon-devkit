@@ -3,7 +3,6 @@ module Stremio::Addon
 
   # An abstracted `Server` interface for Stremio Addons
   class Server(T)
-
     # Constructs a Server instance using *db* as a `DB.open` connection.
     # *table* refers to the database table that will be used
     def initialize(@db : T, @table = "meta")

@@ -1,4 +1,31 @@
-# stremio-addon-server-cr
+<div align="center">
+  <a href="https://github.com/ryan-kraay/stremio-addon-server-cr/" target="_blank" rel="noopener noreferrer">
+    <img width="300" src="https://raw.githubusercontent.com/ryan-kraay/stremio-addon-server-cr/master/assets/logo.png" alt="Logo">
+  </a>
+  
+  <h1>The Unofficial Stremio Addon SDK for Crystal</h1>
+  
+  <p>
+    <a href="https://github.com/ryan-kraay/stremio-addon-server-cr/actions/workflows/ci.yml">
+      <img src="https://github.com/ryan-kraay/stremio-addon-server-cr/actions/workflows/ci.yml/badge.svg" alt="Build Status">
+    </a>
+    <a href="https://github.com/ryan-kraay/stremio-addon-server-cr/blob/main/LICENSE">
+      <img src="https://img.shields.io/github/license/ryan-kraay/stremio-addon-server-cr.svg" alt="License">
+    </a>
+    <a href="https://ryan-kraay.github.io/stremio-addon-server-cr/index.html">
+      <img src="https://img.shields.io/badge/documentation-API-f06" alt="API Documentation">
+    </a> 
+  </p>
+
+  <h3>
+    <a href="https://github.com/ryan-kraay/stremio-addon-server-cr/">Website</a>
+    <span> • </span>
+    <a href="https://ryan-kraay.github.io/stremio-addon-server-cr/index.html">Shard Docs</a>
+  </h3>
+</div>
+
+<hr/>
+
 
 An opinionated database driven framework to rapidly build Stremio Addons, written in Crystal Lang.
 
