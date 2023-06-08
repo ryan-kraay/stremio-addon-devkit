@@ -1,4 +1,4 @@
-require "../src/stremio-addon-sqlite3"
+require "../src/stremio-addon-devkit/sqlite3"
 require "spectator"
 
 # all the magic we need to have a database connection

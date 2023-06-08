@@ -1,7 +1,7 @@
 require "./spec_helper"
 
-Spectator.describe Stremio::Addon::Server do
-  let(addon) { Stremio::Addon::SQLite3.new DB.open("sqlite3:?journal_mode=wal&synchronous=normal") }
+Spectator.describe Stremio::Addon::DevKit::DB do
+  let(addon) { Stremio::Addon::DevKit::SQLite3.new DB.open("sqlite3:?journal_mode=wal&synchronous=normal") }
 
   before_each {
     # FYI:  let() and subject() are lazy-loaded, but are not accessible within a before_all {}

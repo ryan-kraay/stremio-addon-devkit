@@ -1,9 +1,7 @@
-module Stremio::Addon
-  VERSION = "0.0.1"
-
-  # An abstracted `Server` interface for Stremio Addons
-  class Server(T)
-    # Constructs a Server instance using *db* as a `DB.open` connection.
+module Stremio::Addon::DevKit
+  # An abstracted `DB` interface for Stremio Addons
+  class DB(T)
+    # Constructs a DB instance using *db* as a `DB.open` connection.
     # *table* refers to the database table that will be used
     def initialize(@db : T, @table = "meta")
     end
