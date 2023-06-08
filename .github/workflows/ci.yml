@@ -19,8 +19,10 @@ jobs:
         crystal: [1.8.2, latest]  # This needs to be kept in sync with /shards.yml
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: crystal-lang/install-crystal@v1
+      - name: Download source
+        uses: actions/checkout@v3
+      - name: Install Crystal ${{ matrix.crystal }}
+        uses: crystal-lang/install-crystal@v1
         with:
           crystal: ${{ matrix.crystal }}
           shards: true
