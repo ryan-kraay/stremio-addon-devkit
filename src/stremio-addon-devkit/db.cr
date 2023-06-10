@@ -19,7 +19,7 @@ module Stremio::Addon::DevKit
     #
     # WARNING:  This WILL delete ALL the database content
     def delete_all_data
-      [ t_movies ].each do |table|
+      [t_movies].each do |table|
         @db.exec "delete from #{table}"
       end
     end

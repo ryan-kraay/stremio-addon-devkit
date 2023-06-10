@@ -24,7 +24,6 @@ Spectator.describe Stremio::Addon::DevKit::DB do
   end
 
   describe "#import_movie" do
-
     it "inserts data" do
       elements = 10
       (1..elements).each do |x|
@@ -43,7 +42,7 @@ Spectator.describe Stremio::Addon::DevKit::DB do
       was_added = false
 
       expect do
-       was_added = addon.import_movie(priority: 30, uid: uid)
+        was_added = addon.import_movie(priority: 30, uid: uid)
       end.to_not raise_error()
       expect(was_added).to be_true
 
@@ -52,6 +51,5 @@ Spectator.describe Stremio::Addon::DevKit::DB do
       end.to_not raise_error()
       expect(was_added).to be_false
     end
-
   end
 end
