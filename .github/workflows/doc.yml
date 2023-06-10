@@ -20,8 +20,17 @@ jobs:
         uses: crystal-lang/install-crystal@v1
         with:
           crystal: latest
-          shards: false
+          shards: true
+      - name: Cache shards
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/shards
+          key: ${{ runner.os }}-shards-${{ hashFiles('shard.yml') }}
+          restore-keys: ${{ runner.os }}-shards-
+      - name: Install shards
+        run: shards update
       - name: Generate docs
+        # Crystal docs needs our installed shards
         run: crystal doc
       - name: Deploy
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
