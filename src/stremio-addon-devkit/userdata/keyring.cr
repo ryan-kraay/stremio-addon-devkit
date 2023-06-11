@@ -1,5 +1,4 @@
 module Stremio::Addon::DevKit::UserData
-
   alias KeyRingSecret = String
 
   # A KeyRing represents a public/private key mapping.
@@ -9,7 +8,7 @@ module Stremio::Addon::DevKit::UserData
   #
   # An example would be:
   # ```
-  # keyring = { "hotdog": "secret_phrase", "potato": "the secret word" }
+  # keyring = {"hotdog": "secret_phrase", "potato": "the secret word"}
   # ```
   # Let's assume we have the phrase "Top Secret" that we want to encrypt and the result is "ADGAD1234==".
   # We give this encrypted content to a random user.  This random user doesn't actually know what the
@@ -27,8 +26,8 @@ module Stremio::Addon::DevKit::UserData
   #
   # `KeyRing` behaves in the same way, except instead of long words like "hotdog" and "potato", we use
   # index number.  Basically
-  # ```crystal
-  # keyring = [ nil, "secret_phrase", nil, nil, "the secret word", nil ]
+  # ```
+  # keyring = [nil, "secret_phrase", nil, nil, "the secret word", nil]
   # ```
   # and we send our random user "4:ADGAD1234==".  Notice that "the secret word" is at the index 4 in our Array.
   # This is also why it's critical that we never change the order of this index, but you're welcome to replace
@@ -49,9 +48,9 @@ module Stremio::Addon::DevKit::UserData
     # * `csv` : A comma seperated tuple of "position:secret".
     #
     # Example
-    # ```crystal
+    # ```
     # x = KeyRing.new("5:world,3:hello")
-    # puts x  # [ nil, nil, nil, "hello", nil, "world", nil ]
+    # puts x # [ nil, nil, nil, "hello", nil, "world", nil ]
     # ```
     def initialize(csv : String)
       super(Opt::Disable.value - 1, nil)

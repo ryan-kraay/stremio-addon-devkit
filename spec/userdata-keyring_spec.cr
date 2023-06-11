@@ -1,18 +1,17 @@
 require "./spec_helper"
 require "../src/stremio-addon-devkit/userdata/keyring"
 
-
 Spectator.describe Stremio::Addon::DevKit::UserData::KeyRing do
   alias UserData = Stremio::Addon::DevKit::UserData
 
   let(expected) { Array(String?).new(UserData::KeyRing::Opt::Disable.value - 1, nil) }
 
   describe "#initialize" do
-    subject { UserData::KeyRing.new() }
+    subject { UserData::KeyRing.new }
     subject(csv) { UserData::KeyRing.new("4:world,2:hello") }
 
     it "has an empty constructor" do
-      #expect(subject).to have_size(UserData::KeyRing::Opt::Disable.value - 1)
+      # expect(subject).to have_size(UserData::KeyRing::Opt::Disable.value - 1)
       is_expected.to match_array(expected)
     end
 
@@ -46,5 +45,4 @@ Spectator.describe Stremio::Addon::DevKit::UserData::KeyRing do
       expect(subject).to eq(expected)
     end
   end
-
 end

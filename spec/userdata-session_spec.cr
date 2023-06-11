@@ -1,19 +1,17 @@
 require "./spec_helper"
 require "../src/stremio-addon-devkit/userdata/session"
 
-
 Spectator.describe Stremio::Addon::DevKit::UserData::Session do
   alias UserData = Stremio::Addon::DevKit::UserData
 
   let(keyring) {
-      kr = UserData::KeyRing.new()
-      kr[3] = "hello"
-      kr
+    kr = UserData::KeyRing.new
+    kr[3] = "hello"
+    kr
   }
   subject { UserData::Session.new(keyring) }
 
   describe "#initialize" do
-
     it "can be constructed with a keyring" do
       expect do
         subject
@@ -41,5 +39,4 @@ Spectator.describe Stremio::Addon::DevKit::UserData::Session do
       expect(Base64.decode_string(padding)).to eq(content)
     end
   end
-
 end
