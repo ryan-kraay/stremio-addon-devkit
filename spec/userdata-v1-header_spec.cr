@@ -1,30 +1,30 @@
 require "./spec_helper"
-require "../src/stremio-addon-devkit/userdata/header/v1"
+require "../src/stremio-addon-devkit/userdata/v1"
 require "io/memory"
 
-Spectator.describe Stremio::Addon::DevKit::UserData::Header::V1 do
+Spectator.describe Stremio::Addon::DevKit::UserData::V1::Header do
   alias UserData = Stremio::Addon::DevKit::UserData
 
   let(expected_version_hi) { 32_u8 } # (1 << 5) aka |00100000|
   let(expected_iv_lo) { 1_u8 }       # (1 << 0) aka |00000001|
   let(expected_header) { 8193_u16 }  # (1 << 13) & (1 << 0) aka |00100000|00000001|
 
-  subject { UserData::Header::V1.create(Bytes[expected_version_hi, expected_iv_lo]) }
-  #  subject { UserData::Header::V1.new(Bytes[expected_version_hi, expected_iv_lo]) }
+  subject { UserData::V1::Header.create(Bytes[expected_version_hi, expected_iv_lo]) }
+  #  subject { UserData::V1::Header.new(Bytes[expected_version_hi, expected_iv_lo]) }
 
   describe "#create" do
     it "can be constructed with a known iv" do
       expect(subject.iv_random).to eq(expected_iv_lo)
     end
     it "can be constructed with a known version" do
-      expect(subject.version).to eq(UserData::Header::V1::VERSION)
+      expect(subject.version).to eq(UserData::V1::Header::VERSION)
     end
   end
 
   describe "#initialize" do
-    subject { UserData::Header::V1.create }
+    subject { UserData::V1::Header.create }
     it "will have the version set" do
-      expect(subject.version).to eq(UserData::Header::V1::VERSION)
+      expect(subject.version).to eq(UserData::V1::Header::VERSION)
     end
   end
 
@@ -35,7 +35,7 @@ Spectator.describe Stremio::Addon::DevKit::UserData::Header::V1 do
   end
 
   describe "#iv" do
-    subject { result = UserData::Header::V1.create
+    subject { result = UserData::V1::Header.create
     result.iv_random = 97_u8 # ascii "a"
     result }
     it "will only use the iv_random" do
