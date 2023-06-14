@@ -2,6 +2,7 @@ require "./spec_helper"
 require "../src/stremio-addon-devkit/userdata/v1"
 require "io/memory"
 
+
 Spectator.describe Stremio::Addon::DevKit::UserData::V1::Header do
   alias UserData = Stremio::Addon::DevKit::UserData
 
@@ -9,15 +10,25 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1::Header do
   let(expected_iv_lo) { 1_u8 }       # (1 << 0) aka |00000001|
   let(expected_header) { 8193_u16 }  # (1 << 13) & (1 << 0) aka |00100000|00000001|
 
-  subject { UserData::V1::Header.create(Bytes[expected_version_hi, expected_iv_lo]) }
-  #  subject { UserData::V1::Header.new(Bytes[expected_version_hi, expected_iv_lo]) }
+  # WARNING: Spectator.random does not actually use a seed value when --order <seed> is used
+  # TODO: Investigate and file a bug report
+  subject { UserData::V1::Header.create(Spectator.random) }
 
   describe "#create" do
+    subject { UserData::V1::Header.create(Bytes[expected_version_hi, expected_iv_lo]) }
+  #  subject { UserData::V1::Header.new(Bytes[expected_version_hi, expected_iv_lo]) }
+
     it "can be constructed with a known iv" do
       expect(subject.iv_random).to eq(expected_iv_lo)
     end
     it "can be constructed with a known version" do
       expect(subject.version).to eq(UserData::V1::Header::VERSION)
+    end
+    it "can import what it exports" do
+      expect(UserData::V1::Header.create(subject.to_slice).to_s).to eq(subject.to_s)
+    end
+    it "can import more bytes than necessary" do
+      expect(UserData::V1::Header.create(Bytes[expected_version_hi, expected_iv_lo, 255_u8, 100_u8]).to_s).to eq(subject.to_s)
     end
   end
 
@@ -26,9 +37,29 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1::Header do
     it "will have the version set" do
       expect(subject.version).to eq(UserData::V1::Header::VERSION)
     end
+    it "will have an iv_random set" do
+      expect(subject.iv_random).to_not eq(0)
+    end
+  end
+
+  describe "#initialize w/ seed" do
+    let(seed) { 12345 }
+
+    it "works with a fixed seed" do
+      generator1 = Random.new(seed)
+      generator2 = Random.new(seed)
+
+      expected_iv = UserData::V1::Header.create(generator2).iv_random
+      expect( UserData::V1::Header.create(generator1).iv_random ).to eq( expected_iv )
+
+      # by using the random number generator again, we should have a different iv - this tests that we are indeed generating random iv's
+      expect( UserData::V1::Header.create(generator2).iv_random).to_not eq(expected_iv)
+      puts 
+    end
   end
 
   describe "#to_slice" do
+    subject { UserData::V1::Header.create(Bytes[expected_version_hi, expected_iv_lo]) }
     it "will export itself as a Byte Array" do
       expect(subject.to_slice).to eq(Bytes[expected_version_hi, expected_iv_lo])
     end
@@ -61,5 +92,8 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1::Header do
   it "tests little-endianiness again" do
     io = IO::Memory.new(Bytes[expected_version_hi, expected_iv_lo], writable = false)
     expect(io.read_bytes(UInt16, IO::ByteFormat::BigEndian)).to eq(expected_header)
+    #puts Spectator.random.random_bytes(1)
+    puts Spectator.config.to_s
+    puts Spectator.random
   end
 end
