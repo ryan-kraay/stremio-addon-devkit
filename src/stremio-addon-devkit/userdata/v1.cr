@@ -5,6 +5,7 @@ require "openssl/cipher"
 require "base64"
 require "lz4/writer"
 require "./keyring"
+require "./exception"
 
 module Stremio::Addon::DevKit::UserData
 
@@ -46,6 +47,8 @@ module Stremio::Addon::DevKit::UserData
 
       # The version we register as (must fit within `@version`)
       VERSION = 1_u8
+      # How many bytes this header takes
+      BYTESIZE = 2
 
       # Returns a `Header` constructed with `bytes`
       # Paramaters:
@@ -160,22 +163,101 @@ module Stremio::Addon::DevKit::UserData
 
             buf.write(cipher.update lz4io)           # Write our payload
             buf.write(cipher.final)                  # Finalize the payload
-            puts "RKR: Written"
           elsif @ring.is_a?(KeyRing::Opt) && @ring.as(KeyRing::Opt) == KeyRing::Opt::Disable
             buf.write(lz4io.to_slice)           # Write our payload  # WARNING:  Our payload is actually duplicated
-            puts "RKR: Plain-text"
           else
             raise Exception.new("Unreachable")
           end
           buf.rewind
 
-          puts buf.to_slice
-          buf.rewind
           buf
         {% end %}
         Base64.urlsafe_encode data = aesio, padding = false
       {% end %}
       base64
+    end
+
+    # Returns a byte stream of compressed content
+    #
+    # Parameters:
+    #  - `data`: The data to (optionally) compress
+    #  - `header`: Contains `header.compress` to determine if compression is desired or not
+    protected def compress(header : Header, data : Bytes) : Bytes
+
+      return data if header.compress == 0_u8
+
+      buf = IO::Memory.new
+      # enable compression
+      Compress::LZ4::Writer.open(buf) do |br|
+        br.write data
+      end
+      buf.rewind
+
+      buf.to_slice
+    end
+
+    protected def decompress(header : Header, edata : Bytes) : Bytes
+
+      return edata if header.compress == 0_u8
+
+      # TODO: I fear we're duplicating edata as we put it into buf
+      buf = IO::Memory.new(edata)
+      results = Compress::LZ4::Reader.open(buf) do |br|
+          br.gets_to_end
+      end
+
+      results.to_slice
+    end
+
+    # Returns a byte stream of encrypted content
+    #
+    # Parameters:
+    #   - `data`: The data to encrypt
+    #   - `header`: Contains the instructions for how to encrypt `data`
+    protected def encrypt(header : Header, data : Bytes) : Bytes
+      buf = IO::Memory.new
+      buf.write(header.to_slice) # Write our header first in plain-text
+      if @ring.is_a?(KeyRing) && header.keyring != KeyRing::Opt::Disable.to_u8
+        cipher = OpenSSL::Cipher.new("aes-256-cbc")
+        cipher.encrypt
+        cipher.key = @ring.as(KeyRing)[ header.keyring ].as(String).to_slice
+        cipher.iv = header.iv(@iv_static)
+
+        buf.write(cipher.update data)           # Write our payload
+        buf.write(cipher.final)                  # Finalize the payload
+      elsif @ring.is_a?(KeyRing::Opt) && @ring.as(KeyRing::Opt) == KeyRing::Opt::Disable || header.keyring == KeyRing::Opt::Disable.to_u8
+        buf.write(data)           # Write our payload
+      else
+        raise Exception.new("Unreachable")
+      end
+      buf.rewind
+
+      buf.to_slice
+    end
+
+    protected def decrypt(edata : Bytes) : Tuple(Header, Bytes)
+      raise HeaderMalformed.new( "Malformed Header Size #{edata.bytesize}" ) if edata.bytesize < Header::BYTESIZE
+      
+      header = Header.new( edata )
+
+      raise HeaderMalformed.new( "Incompatible version, recieved:#{header.version} expected:#{Header::VERSION}" ) if header.version != Header::VERSION
+      edata += Header::BYTESIZE # skip over the size of our header
+
+      return { header, edata } if header.keyring == KeyRing::Opt::Disable.to_u8
+
+      raise Exception.new("Unreachable: Unknown @ring") unless @ring.is_a?(KeyRing)
+
+      cipher = OpenSSL::Cipher.new("aes-256-cbc")
+      cipher.decrypt
+      cipher.key = @ring.as(KeyRing)[ header.keyring ].as(String).to_slice
+      cipher.iv = header.iv(@iv_static)
+
+      buf = IO::Memory.new
+      buf.write(cipher.update(edata))
+      buf.write(cipher.final)
+      buf.rewind
+
+      { header, buf.to_slice }
     end
   end
 end

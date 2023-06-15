@@ -54,7 +54,6 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1::Header do
 
       # by using the random number generator again, we should have a different iv - this tests that we are indeed generating random iv's
       expect( UserData::V1::Header.create(generator2).iv_random).to_not eq(expected_iv)
-      puts 
     end
   end
 
@@ -92,8 +91,5 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1::Header do
   it "tests little-endianiness again" do
     io = IO::Memory.new(Bytes[expected_version_hi, expected_iv_lo], writable = false)
     expect(io.read_bytes(UInt16, IO::ByteFormat::BigEndian)).to eq(expected_header)
-    #puts Spectator.random.random_bytes(1)
-    puts Spectator.config.to_s
-    puts Spectator.random
   end
 end
