@@ -169,6 +169,24 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
     end
   end
 
+  describe "#encode/#decode" do
+    let(expected) {"top secret".to_slice}
+    
+    it "has basic functionality" do
+      encoded = Bytes[0]
+      #expect do
+        encoded = v1.encode(expected, random_generator: Spectator.random)
+      #end.to_not raise_error()
+
+      results = Bytes[0]
+      expect do
+        results = v1.decode(encoded)
+      end.to_not raise_error()
+
+      expect(results).to eq(expected)
+    end
+  end
+
   describe "#encode" do
     let(expected) { "top secret" }
     #
