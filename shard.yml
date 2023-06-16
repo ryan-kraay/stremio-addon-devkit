@@ -8,6 +8,15 @@ crystal: 1.8.2
 
 license: LGPL
 
+
+dependencies:
+  bitfields:
+    github: elorest/bitfields
+    version: ~> 1.2.1
+  lz4:
+    github: naqvis/lz4.cr
+    version: ~> 0.1.4
+
 development_dependencies:
   spectator:
     gitlab: arctic-fox/spectator
