@@ -2,7 +2,6 @@ require "./spec_helper"
 require "../src/stremio-addon-devkit/userdata/v1"
 require "io/memory"
 
-
 Spectator.describe Stremio::Addon::DevKit::UserData::V1::Header do
   alias UserData = Stremio::Addon::DevKit::UserData
 
@@ -16,7 +15,7 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1::Header do
 
   describe "#create" do
     subject { UserData::V1::Header.create(Bytes[expected_version_hi, expected_iv_lo]) }
-  #  subject { UserData::V1::Header.new(Bytes[expected_version_hi, expected_iv_lo]) }
+    #  subject { UserData::V1::Header.new(Bytes[expected_version_hi, expected_iv_lo]) }
 
     it "can be constructed with a known iv" do
       expect(subject.iv_random).to eq(expected_iv_lo)
@@ -50,10 +49,10 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1::Header do
       generator2 = Random.new(seed)
 
       expected_iv = UserData::V1::Header.create(generator2).iv_random
-      expect( UserData::V1::Header.create(generator1).iv_random ).to eq( expected_iv )
+      expect(UserData::V1::Header.create(generator1).iv_random).to eq(expected_iv)
 
       # by using the random number generator again, we should have a different iv - this tests that we are indeed generating random iv's
-      expect( UserData::V1::Header.create(generator2).iv_random).to_not eq(expected_iv)
+      expect(UserData::V1::Header.create(generator2).iv_random).to_not eq(expected_iv)
     end
   end
 

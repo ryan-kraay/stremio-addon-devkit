@@ -8,10 +8,7 @@ require "./keyring"
 require "./exception"
 
 module Stremio::Addon::DevKit::UserData
-
-
   class V1(T)
-
     # Our enrypted userdata contains a custom header.  We can support different versions of these header.
     # This class defines Version 1.
     # WARNING: Headers are stored and transmitted as big endian (aka: network byte order)
@@ -69,10 +66,10 @@ module Stremio::Addon::DevKit::UserData
         rtn = Header.new Bytes[0, 0]
         rtn.version = Header::VERSION
         rtn.iv_random = {% begin %}
-          b = Bytes[0]
-          random_generator.random_bytes(b)
-          b[0]
-        {% end %}
+                          b = Bytes[0]
+                          random_generator.random_bytes(b)
+                          b[0]
+                        {% end %}
         rtn
       end
 
@@ -94,7 +91,7 @@ module Stremio::Addon::DevKit::UserData
         hash.final
         # hash.hexfinal
       end
-    end  # END of `Header`
+    end # END of `Header`
 
     # Constructs UserData Version 1 Interface
     #
@@ -112,21 +109,21 @@ module Stremio::Addon::DevKit::UserData
       if @ring.is_a?(KeyRing)
         # we want to find all the positions in our keyring, where the value is not nil
         used_positions = @ring.as(KeyRing).map_with_index do |secret, pos|
-            # Combine our values with their index/position
-            {pos, secret}
-          end.select do |pair|
-            # Filter out values that are nil
-            !pair[1].nil?
-          end.map do |pair|
-            # return the index
-            pair[0]
-          end
+          # Combine our values with their index/position
+          {pos, secret}
+        end.select do |pair|
+          # Filter out values that are nil
+          !pair[1].nil?
+        end.map do |pair|
+          # return the index
+          pair[0]
+        end
         # Raise an error if used_positions is empty. aka our KeyRing is empty
         raise IndexError.new("Empty KeyRing, use KeyRing::Opt::Disable") if used_positions.empty?
 
         # Randomly choose from one of the available indexes
         index = random_generator.rand(0..used_positions.size - 1)
-        header.keyring = used_positions[index].to_u8  # Our chosen keyring
+        header.keyring = used_positions[index].to_u8 # Our chosen keyring
       end
 
       encode(data.to_slice, header)
@@ -183,7 +180,6 @@ module Stremio::Addon::DevKit::UserData
     #  - `data`: The data to (optionally) compress
     #  - `header`: Contains `header.compress` to determine if compression is desired or not
     protected def compress(header : Header, data : Bytes) : Bytes
-
       return data if header.compress == 0_u8
 
       buf = IO::Memory.new
@@ -197,13 +193,12 @@ module Stremio::Addon::DevKit::UserData
     end
 
     protected def decompress(header : Header, edata : Bytes) : Bytes
-
       return edata if header.compress == 0_u8
 
       # TODO: I fear we're duplicating edata as we put it into buf
       buf = IO::Memory.new(edata)
       results = Compress::LZ4::Reader.open(buf) do |br|
-          br.gets_to_end
+        br.gets_to_end
       end
 
       results.to_slice
@@ -218,7 +213,7 @@ module Stremio::Addon::DevKit::UserData
       buf = IO::Memory.new
       buf.write(header.to_slice) # Write our header first in plain-text
       if @ring.is_a?(KeyRing) && header.keyring != KeyRing::Opt::Disable.to_u8
-        key_or_nil = @ring.as(KeyRing)[ header.keyring ]
+        key_or_nil = @ring.as(KeyRing)[header.keyring]
         raise IndexError.new("KeyRing Index #{header.keyring} is nil") if key_or_nil.is_a?(::Nil)
 
         cipher = OpenSSL::Cipher.new("aes-256-cbc")
@@ -226,10 +221,10 @@ module Stremio::Addon::DevKit::UserData
         cipher.key = key_or_nil.as(String).to_slice
         cipher.iv = header.iv(@iv_static)
 
-        buf.write(cipher.update data)           # Write our payload
-        buf.write(cipher.final)                  # Finalize the payload
+        buf.write(cipher.update data) # Write our payload
+        buf.write(cipher.final)       # Finalize the payload
       elsif @ring.is_a?(KeyRing::Opt) && @ring.as(KeyRing::Opt) == KeyRing::Opt::Disable || header.keyring == KeyRing::Opt::Disable.to_u8
-        buf.write(data)           # Write our payload
+        buf.write(data) # Write our payload
       else
         raise Exception.new("Unreachable")
       end
@@ -239,18 +234,18 @@ module Stremio::Addon::DevKit::UserData
     end
 
     protected def decrypt(edata : Bytes) : Tuple(Header, Bytes)
-      raise HeaderMalformed.new( "Malformed Header Size #{edata.bytesize}" ) if edata.bytesize < Header::BYTESIZE
-      
-      header = Header.new( edata )
+      raise HeaderMalformed.new("Malformed Header Size #{edata.bytesize}") if edata.bytesize < Header::BYTESIZE
 
-      raise HeaderMalformed.new( "Incompatible version, recieved:#{header.version} expected:#{Header::VERSION}" ) if header.version != Header::VERSION
+      header = Header.new(edata)
+
+      raise HeaderMalformed.new("Incompatible version, recieved:#{header.version} expected:#{Header::VERSION}") if header.version != Header::VERSION
       edata += Header::BYTESIZE # skip over the size of our header
 
-      return { header, edata } if header.keyring == KeyRing::Opt::Disable.to_u8
+      return {header, edata} if header.keyring == KeyRing::Opt::Disable.to_u8
 
       raise Exception.new("Unreachable: Unknown @ring") unless @ring.is_a?(KeyRing)
 
-      key = @ring.as(KeyRing)[ header.keyring ]
+      key = @ring.as(KeyRing)[header.keyring]
       raise IndexError.new("KeyRing Index #{header.keyring}") if key.is_a?(::Nil)
 
       cipher = OpenSSL::Cipher.new("aes-256-cbc")
@@ -263,7 +258,7 @@ module Stremio::Addon::DevKit::UserData
       buf.write(cipher.final)
       buf.rewind
 
-      { header, buf.to_slice }
+      {header, buf.to_slice}
     end
   end
 end

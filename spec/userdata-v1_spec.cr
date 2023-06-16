@@ -35,7 +35,7 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
   }
 
   let(iv_static) { "an internal phrase only my app knows" }
-    
+
   subject(v1) { V1Exposed.new keyring, iv_static }
 
   describe "#initialize" do
@@ -50,9 +50,8 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
   describe "#compress / #decompress; compress = enabled" do
     let(content) { "my pyaload".to_slice }
     subject(header) { h = V1Exposed::Header.create(Spectator.random)
-      h.compress = 1_u8
-      h
-    }
+    h.compress = 1_u8
+    h }
 
     it "compresses and decompresses" do
       compressed = Bytes[0]
@@ -75,9 +74,8 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
   describe "#compress / #decompress; compress = disabled" do
     let(content) { "my pyaload".to_slice }
     subject(header) { h = V1Exposed::Header.create(Spectator.random)
-      h.compress = 0_u8
-      h
-    }
+    h.compress = 0_u8
+    h }
 
     it "compresses and decompresses" do
       compressed = Bytes[0]
@@ -100,9 +98,8 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
   describe "#encrypt / decrypt; encryption = enabled" do
     let(content) { "my payload".to_slice }
     subject(header) { h = V1Exposed::Header.create(Spectator.random)
-      h.keyring = 1 # This matches the index of our @keyring
-      h
-    }
+    h.keyring = 1 # This matches the index of our @keyring
+    h }
 
     it "encrypts and decrypts" do
       encrypted = Bytes[0]
@@ -126,12 +123,11 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
     it "fails when encrypting with an invalid keyring" do
       h = header
       h.keyring = 0 # This does not exist in our index
-      expect(keyring[ h.keyring ]).to be_nil
+      expect(keyring[h.keyring]).to be_nil
 
       expect do
         v1.encrypt(h, content)
       end.to raise_error(IndexError)
-
 
       # TODO: test encrypt with an invalid index
       # TODO: test decrypt with an invalid index header
@@ -142,10 +138,10 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
 
       # We'll construct a new v1 w/ a different keyring
       keyring_bad = {% begin %}
-        kr = UserData::KeyRing.new
-        kr[0] = "lalalalalala"
-        kr
-      {% end %}
+                      kr = UserData::KeyRing.new
+                      kr[0] = "lalalalalala"
+                      kr
+                    {% end %}
       v1_bad = V1Exposed.new keyring_bad, iv_static
 
       expect do
@@ -156,9 +152,8 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
   describe "#encrypt / decrypt; encryption = disabled" do
     let(content) { "my payload".to_slice }
     subject(header) { h = V1Exposed::Header.create(Spectator.random)
-      h.keyring = UserData::KeyRing::Opt::Disable.to_u8
-      h
-    }
+    h.keyring = UserData::KeyRing::Opt::Disable.to_u8
+    h }
 
     it "encrypts and decrypts" do
       encrypted = Bytes[0]
@@ -181,37 +176,37 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
   end
 
   describe "#encode" do
-    let( expected ) { "top secret" }
-#    
-#    it "encodes" do
-#      result = subject.encode(expected, compress: true, random_generator: Spectator.random)
-#      expect(result).to_not be_empty
-#
-#      puts result
-#
-#      # Decode the base64
-#      remove_base64 = Bytes[]
-#      expect do
-#        remove_base64 = Base64.decode(result)
-#      end.to_not raise_error()
-#      expect(remove_base64).to_not be_empty
-#      puts remove_base64.to_slice
-#      header = UserData::V1::Header.create()
-#      expect do
-#        header = UserData::V1::Header.create(remove_base64)
-#        #header = UserData::V1::Header.create(Bytes[ remove_base64[0], remove_base64[1] ])
-#      end.to_not raise_error()
-#      puts header.to_s
-#      expect(header.version).to eq(UserData::V1::Header::VERSION)
-#
-#      # Remove the aes
-##      remove_aes = {% begin %}
-##        cipher = OpenSSL::Cipher.new("aes-256-cbc")
-##        cipher.decrypt
-##        cipher.key = keyring[ 
-##      {% end %}
-#
-#    end
+    let(expected) { "top secret" }
+    #
+    #    it "encodes" do
+    #      result = subject.encode(expected, compress: true, random_generator: Spectator.random)
+    #      expect(result).to_not be_empty
+    #
+    #      puts result
+    #
+    #      # Decode the base64
+    #      remove_base64 = Bytes[]
+    #      expect do
+    #        remove_base64 = Base64.decode(result)
+    #      end.to_not raise_error()
+    #      expect(remove_base64).to_not be_empty
+    #      puts remove_base64.to_slice
+    #      header = UserData::V1::Header.create()
+    #      expect do
+    #        header = UserData::V1::Header.create(remove_base64)
+    #        #header = UserData::V1::Header.create(Bytes[ remove_base64[0], remove_base64[1] ])
+    #      end.to_not raise_error()
+    #      puts header.to_s
+    #      expect(header.version).to eq(UserData::V1::Header::VERSION)
+    #
+    #      # Remove the aes
+    # #      remove_aes = {% begin %}
+    # #        cipher = OpenSSL::Cipher.new("aes-256-cbc")
+    # #        cipher.decrypt
+    # #        cipher.key = keyring[
+    # #      {% end %}
+    #
+    #    end
 
     it "raises an error when given an empty keyring" do
       expect do
