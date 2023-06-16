@@ -8,12 +8,15 @@ Spectator.describe Stremio::Addon::DevKit::UserData::KeyRing do
 
   describe "#initialize" do
     subject { UserData::KeyRing.new }
-    subject(csv) { UserData::KeyRing.new("4:world,2:hello") }
 
     it "has an empty constructor" do
       # expect(subject).to have_size(UserData::KeyRing::Opt::Disable.value - 1)
       is_expected.to match_array(expected)
     end
+  end
+
+  describe "#initialize w/ csv" do
+    subject(csv) { UserData::KeyRing.new("4:world,2:hello") }
 
     it "imports a CSV string" do
       expect do
@@ -25,10 +28,13 @@ Spectator.describe Stremio::Addon::DevKit::UserData::KeyRing do
       expect(csv).to eq(expected)
     end
 
-    it "errors with an invalid CSV" do
-      expect do
-        UserData::KeyRing.new("invalid string")
-      end.to raise_error()
+    
+    sample [ "hello:world", "hello:hello:world", "test", "300:hello", "10:hello", "1:hello,x:invalid", "1:" ].each do |invalid_csv|
+      it "errors with an invalid CSV" do
+        expect do
+          UserData::KeyRing.new(invalid_csv)
+        end.to raise_error(UserData::KeyRingCSV)
+      end
     end
   end
 

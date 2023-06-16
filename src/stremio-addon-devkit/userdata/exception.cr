@@ -6,5 +6,10 @@ module Stremio::Addon::DevKit::UserData
     end
   end
 
+  class KeyRingCSV < Exception
+    def initialize(message = "Failed to parse KeyRing CSV")
+      super(message)
+    end
+  end
 end
 

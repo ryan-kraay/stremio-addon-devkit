@@ -1,3 +1,5 @@
+require "./exception"
+
 module Stremio::Addon::DevKit::UserData
   alias KeyRingSecret = String
 
@@ -54,6 +56,27 @@ module Stremio::Addon::DevKit::UserData
     # ```
     def initialize(csv : String)
       super(Opt::Disable.value - 1, nil)
+      reg = /^([0-9]+):(.+)$/
+      csv.split(',').each do |entry|
+        next if entry.empty?
+
+        # TODO:  There are probably smarter ways of seperating the "index:" from the "payload"
+        match = entry.match(reg)
+        raise KeyRingCSV.new("Malformed: Cannot parse #{entry}") if match.is_a?(::Nil)
+        index = 0_u8
+        begin
+          index_text = match.as(Regex::MatchData)[1]
+          index = index_text.to_u8
+
+          raise KeyRingCSV.new("Index #{index_text} must be less than #{Opt::Disable.value}") unless index < Opt::Disable.value
+        rescue ArgumentError
+          raise KeyRingCSV.new("Index #{index_text} must be less than #{Opt::Disable.value}")
+        end
+        payload = match.as(Regex::MatchData)[2]
+
+        raise KeyRingCSV.new("Parsed #{index}, but payload is empty") if payload.empty?
+        self.[index] = payload
+      end
     end
   end
 end
