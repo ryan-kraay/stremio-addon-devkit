@@ -109,33 +109,32 @@ module Stremio::Addon::DevKit::UserData
       if @ring.is_a?(KeyRing)
         # we want to find all the positions in our keyring, where the value is not nil
         used_positions = @ring.as(KeyRing).map_with_index do |secret, pos|
-            # Combine our values with their index/position
-            {pos, secret}
-          end.select do |pair|
-            # Filter out values that are nil
-            !pair[1].nil?
-          end.map do |pair|
-            # return the index
-            pair[0]
-          end
+          # Combine our values with their index/position
+          {pos, secret}
+        end.select do |pair|
+          # Filter out values that are nil
+          !pair[1].nil?
+        end.map do |pair|
+          # return the index
+          pair[0]
+        end
         # Raise an error if used_positions is empty. aka our KeyRing is empty
         raise IndexError.new("Empty KeyRing: use KeyRing::Opt::Disable, if intended") if used_positions.empty?
 
         # Randomly choose from one of the available indexes
         index = random_generator.rand(0..used_positions.size - 1)
-        header.keyring = used_positions[index].to_u8  # Our chosen keyring
+        header.keyring = used_positions[index].to_u8 # Our chosen keyring
       elsif @ring.is_a?(KeyRing::Opt) && @ring.as(KeyRing::Opt) == KeyRing::Opt::Disable
         header.keyring = KeyRing::Opt::Disable.value.to_u8
       else
         raise Exception.new("Unreachable")
       end
-      encrypt( header, compress( header, data.to_slice ) )
+      encrypt(header, compress(header, data.to_slice))
     end
 
     def decode(data) : Bytes
-      decompress( *decrypt(data.to_slice) )
+      decompress(*decrypt(data.to_slice))
     end
-
 
     # Returns a byte stream of compressed content
     #

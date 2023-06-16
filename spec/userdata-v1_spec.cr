@@ -170,13 +170,13 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
   end
 
   describe "#encode/#decode" do
-    let(expected) {"top secret".to_slice}
-    
+    let(expected) { "top secret".to_slice }
+
     it "has basic functionality" do
       encoded = Bytes[0]
-      #expect do
+      expect do
         encoded = v1.encode(expected, random_generator: Spectator.random)
-      #end.to_not raise_error()
+      end.to_not raise_error()
 
       results = Bytes[0]
       expect do
@@ -185,40 +185,6 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
 
       expect(results).to eq(expected)
     end
-  end
-
-  describe "#encode" do
-    let(expected) { "top secret" }
-    #
-    #    it "encodes" do
-    #      result = subject.encode(expected, compress: true, random_generator: Spectator.random)
-    #      expect(result).to_not be_empty
-    #
-    #      puts result
-    #
-    #      # Decode the base64
-    #      remove_base64 = Bytes[]
-    #      expect do
-    #        remove_base64 = Base64.decode(result)
-    #      end.to_not raise_error()
-    #      expect(remove_base64).to_not be_empty
-    #      puts remove_base64.to_slice
-    #      header = UserData::V1::Header.create()
-    #      expect do
-    #        header = UserData::V1::Header.create(remove_base64)
-    #        #header = UserData::V1::Header.create(Bytes[ remove_base64[0], remove_base64[1] ])
-    #      end.to_not raise_error()
-    #      puts header.to_s
-    #      expect(header.version).to eq(UserData::V1::Header::VERSION)
-    #
-    #      # Remove the aes
-    # #      remove_aes = {% begin %}
-    # #        cipher = OpenSSL::Cipher.new("aes-256-cbc")
-    # #        cipher.decrypt
-    # #        cipher.key = keyring[
-    # #      {% end %}
-    #
-    #    end
 
     it "raises an error when given an empty keyring" do
       expect do

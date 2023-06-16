@@ -25,12 +25,12 @@ Spectator.describe Stremio::Addon::DevKit::UserData::Session do
   describe "#encode/#decode" do
     let(expected) { "grandma's apple pie recipe" }
     it "has basic functionality" do
-      encrypted = String.new()
+      encrypted = String.new
       expect do
         encrypted = subject.encode(expected, random_generator: Spectator.random)
       end.to_not raise_error()
 
-      result = String.new()
+      result = String.new
       expect do
         result = subject.decode(encrypted)
       end.to_not raise_error()

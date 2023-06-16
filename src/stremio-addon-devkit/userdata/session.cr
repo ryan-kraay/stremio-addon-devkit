@@ -12,7 +12,7 @@ module Stremio::Addon::DevKit::UserData
 
     def encode(data, compress : Bool = true, random_generator = Random::Secure) : String
       latest = V1.new(@ring, @iv_static)
-      Base64.urlsafe_encode( latest.encode(data.to_slice, compress, random_generator), padding: false )
+      Base64.urlsafe_encode(latest.encode(data.to_slice, compress, random_generator), padding: false)
     end
 
     def decode_to_bytes(data) : Bytes
