@@ -21,5 +21,13 @@ module Stremio::Addon::DevKit::UserData
       # end
       # Base64.urlsafe_encode(content, padding = false)
     end
+
+    def decode(data) : Bytes
+      Bytes[0]
+    end
+
+    def decode_to_s(data) : String
+      String.new(decode(data))
+    end
   end
 end

@@ -123,12 +123,34 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
       expect(decrypted_data).to eq(content)
     end
 
-    it "invalid keyring fails" do
+    it "fails when encrypting with an invalid keyring" do
       h = header
       h.keyring = 0 # This does not exist in our index
-      expect(keyring[ h.keyring ]).to_not be_nil
+      expect(keyring[ h.keyring ]).to be_nil
+
+      expect do
+        v1.encrypt(h, content)
+      end.to raise_error(IndexError)
+
+
       # TODO: test encrypt with an invalid index
       # TODO: test decrypt with an invalid index header
+    end
+
+    it "fails when decrypting with an invalid keyring" do
+      encrypted = v1.encrypt(header, content)
+
+      # We'll construct a new v1 w/ a different keyring
+      keyring_bad = {% begin %}
+        kr = UserData::KeyRing.new
+        kr[0] = "lalalalalala"
+        kr
+      {% end %}
+      v1_bad = V1Exposed.new keyring_bad, iv_static
+
+      expect do
+        v1_bad.decrypt(encrypted)
+      end.to raise_error(IndexError)
     end
   end
   describe "#encrypt / decrypt; encryption = disabled" do

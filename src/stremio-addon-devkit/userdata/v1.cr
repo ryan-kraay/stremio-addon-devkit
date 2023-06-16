@@ -218,9 +218,12 @@ module Stremio::Addon::DevKit::UserData
       buf = IO::Memory.new
       buf.write(header.to_slice) # Write our header first in plain-text
       if @ring.is_a?(KeyRing) && header.keyring != KeyRing::Opt::Disable.to_u8
+        key_or_nil = @ring.as(KeyRing)[ header.keyring ]
+        raise IndexError.new("KeyRing Index #{header.keyring} is nil") if key_or_nil.is_a?(::Nil)
+
         cipher = OpenSSL::Cipher.new("aes-256-cbc")
         cipher.encrypt
-        cipher.key = @ring.as(KeyRing)[ header.keyring ].as(String).to_slice
+        cipher.key = key_or_nil.as(String).to_slice
         cipher.iv = header.iv(@iv_static)
 
         buf.write(cipher.update data)           # Write our payload
@@ -247,9 +250,12 @@ module Stremio::Addon::DevKit::UserData
 
       raise Exception.new("Unreachable: Unknown @ring") unless @ring.is_a?(KeyRing)
 
+      key = @ring.as(KeyRing)[ header.keyring ]
+      raise IndexError.new("KeyRing Index #{header.keyring}") if key.is_a?(::Nil)
+
       cipher = OpenSSL::Cipher.new("aes-256-cbc")
       cipher.decrypt
-      cipher.key = @ring.as(KeyRing)[ header.keyring ].as(String).to_slice
+      cipher.key = key.as(String).to_slice
       cipher.iv = header.iv(@iv_static)
 
       buf = IO::Memory.new
