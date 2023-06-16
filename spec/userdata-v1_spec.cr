@@ -29,9 +29,7 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
   alias UserData = Stremio::Addon::DevKit::UserData
 
   let(keyring) {
-    kr = UserData::KeyRing.new
-    kr[1] = "this string must be at least 32-characters long fjdsklfjkdslfjklsadfjkldasfjkldsfjkldsfjklsafjklsdjfkl"
-    kr
+    UserData::KeyRing.new("1:this string must be at least 32-characters long fjdsklfjkdslfjklsadfjkldasfjkldsfjkldsfjklsafjklsdjfkl")
   }
 
   let(iv_static) { "an internal phrase only my app knows" }
@@ -137,11 +135,7 @@ Spectator.describe Stremio::Addon::DevKit::UserData::V1 do
       encrypted = v1.encrypt(header, content)
 
       # We'll construct a new v1 w/ a different keyring
-      keyring_bad = {% begin %}
-                      kr = UserData::KeyRing.new
-                      kr[0] = "lalalalalala"
-                      kr
-                    {% end %}
+      keyring_bad = UserData::KeyRing.new("0:lalalalalala")
       v1_bad = V1Exposed.new keyring_bad, iv_static
 
       expect do
