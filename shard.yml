@@ -16,6 +16,9 @@ dependencies:
   lz4:
     github: naqvis/lz4.cr
     version: ~> 0.1.4
+  json-serializable-fake:
+    github: ryan-kraay/json-serializable-fake
+    branch: main
 
 development_dependencies:
   spectator:
