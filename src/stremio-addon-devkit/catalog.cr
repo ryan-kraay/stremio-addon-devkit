@@ -2,7 +2,6 @@ require "json"
 require "json-serializable-fake"
 
 module Stremio::Addon::DevKit
-
   # These are the possible content types supported by Stremio, you can prune or expand this to fit your needs
   #  See: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/content.types.md
   enum ContentType
@@ -62,12 +61,12 @@ module Stremio::Addon::DevKit
       # `options`: optional - an explicit lists of "steps" to follow.  If an empty list is defined, the default value of "100" will be used.
       # This means the addon will request 100 entries, until it receives less than 100 entries (to signify the end of the list)
       getter options : Array(String)?
-      def initialize(@isRequired = false, steps = Array(UInt32).new())
+
+      def initialize(@isRequired = false, steps = Array(UInt32).new)
         @name = ExtraType::Skip
         @options = steps.empty? ? nil : steps.map { |step| step.to_s }
       end
     end
-
 
     # `type`: **required** - string, this is the content type of the catalog
     getter type : ContentT
@@ -79,5 +78,4 @@ module Stremio::Addon::DevKit
     def initialize(@type, @id, @name)
     end
   end
-
 end
