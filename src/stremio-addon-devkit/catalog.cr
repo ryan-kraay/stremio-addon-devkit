@@ -51,7 +51,6 @@ module Stremio::Addon::DevKit
     @[JSON::Serializable::Options(ignore_deserialize: true)]
     class ExtraSkip
       include JSON::Serializable
-      include JSON::Serializable::Fake
 
       # `name`: required - **string**, is the name of the property; this name will be used in the extraProps argument itself
       getter name : ExtraType
@@ -68,12 +67,59 @@ module Stremio::Addon::DevKit
       end
     end
 
+    # Enables Filtering Based on Genre *or other tags*
+    #  See: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md#extra-properties
+    @[JSON::Serializable::Options(ignore_deserialize: true)]
+    class ExtraGenre
+      include JSON::Serializable
+      include JSON::Serializable::Fake
+      alias GenresResultType = Array(String)
+      alias GenresProcType = Proc(GenresResultType)
+
+      # `name`: required - **string**, is the name of the property; this name will be used in the extraProps argument itself
+      getter name : ExtraType
+      # `isRequired`: optional - boolean, set to true if this property must always be passed
+      getter isRequired : Bool
+
+      # `optionsLimit` - optional - number, the limit of values a user may select from the pre-set options list; by default, this is set to 1
+      getter optionsLimit : UInt32
+
+      # `options`: optional - array of strings, possible values for this property; this is useful for things like genres, where you need the user to select from a pre-set list of options (e.g. { name: "genre", options: ["Action", "Comedy", "Drama"] });
+      @[JSON::FakeField]
+      def options(json : ::JSON::Builder) : Nil
+        # normalize our genres as a simple Array of Strings
+        g : GenresResultType = genres.is_a?(GenresProcType) ? genres.as(GenresProcType).call : genres.as(GenresResultType)
+
+        raise ArgumentError.new("ExtraGenre#max_selectable cannot be 0") unless @optionsLimit > 0_u32
+        raise ArgumentError.new("ExtraGenre@max_selectable cannot be larger than the number of genres(#{g.size})") if @optionsLimit > g.size
+
+        g.to_json(json)
+      end
+
+
+      # `genres` - **required** a list of genres or other tags that the user can filter/select from
+      # **NOTE**:  The list of genres is only generated when creating a manfiest.  Afterwards, this list of genres cannot be changed (unless the addon is
+      #  reinstalled)
+      @[JSON::Field(ignore: true)]
+      getter genres : GenresResultType | GenresProcType
+
+      def initialize( @genres : GenresResultType | GenresProcType , @isRequired = false, max_selectable : UInt32 = 1 )
+        @name = ExtraType::Genre
+        @optionsLimit = max_selectable
+      end
+
+      def initialize( isRequired = false, max_selectable : UInt32 = 1, &block : -> GenresResultType )
+        initialize(block, isRequired, max_selectable)
+      end
+    end
+
     # `type`: **required** - string, this is the content type of the catalog
     getter type : ContentT
     # `id`: **required** - string, the id of the catalog, can be any unique string describing the catalog (unique per addon, as an addon can have many catalogs), for example: if the catalog name is "Favourite Youtube Videos", the id can be "fav_youtube_videos"
     getter id : String
     # `name`: **required** - string, human readable name of the catalog
     getter name : String
+
 
     def initialize(@type, @id, @name)
     end

@@ -5,7 +5,9 @@ Spectator.describe Stremio::Addon::DevKit::Catalog do
   alias Catalog = Stremio::Addon::DevKit::Catalog
   alias ContentType = Stremio::Addon::DevKit::ContentType
 
-  subject { Catalog.new(ContentType::Movie, "hello", "Hello Channel") }
+  let(id) { "hello" }
+  let(name) { "Hello Channel" }
+  let(content_type) { ContentType::Movie }
 
   describe "ExtraSearch" do
     subject { Catalog::ExtraSearch.new }
@@ -64,11 +66,96 @@ Spectator.describe Stremio::Addon::DevKit::Catalog do
     end
   end
 
-  describe "#initialize" do
-    it "can initialize" do
-      expect do
-        subject
-      end.to_not raise_error
+  describe "ExtraGenre" do
+    let(genres) { ["Action", "Comedy", "Sci-Fi" ] }
+    describe "#initialize" do
+      it "accepts a list of genres" do
+        result = Catalog::ExtraGenre.new genres
+        expect(result.to_json).to eq({"name": "genre", "isRequired": false,"optionsLimit": 1, "options": genres }.to_json)
+      end
+      it "accepts a block" do
+        result = Catalog::ExtraGenre.new do genres end
+        expect(result.to_json).to eq({"name": "genre", "isRequired": false, "optionsLimit": 1, "options": genres}.to_json)
+      end
+      it "allows multiple genre's to be chosen" do
+        max_selectable_genres = 2_u32
+        result = Catalog::ExtraGenre.new genres, max_selectable: max_selectable_genres
+        expect(result.to_json).to eq({"name": "genre", "isRequired": false, "optionsLimit": max_selectable_genres, "options": genres}.to_json)
+      end
+    end
+    describe "#to_json" do
+      it "raises an exceptions for invalid inputs" do
+        # cannot have zero max_selectable_genres
+        expect do
+          Catalog::ExtraGenre.new(genres, max_selectable: 0).to_json
+        end.to raise_error(ArgumentError)
+
+        # cannot have more selectable_genres than genres
+        expect do
+          Catalog::ExtraGenre.new( genres, max_selectable: (genres.size + 1).to_u32).to_json
+        end.to raise_error(ArgumentError)
+
+        # Likewise, this means empty genres are not allowed
+        expect do
+          Catalog::ExtraGenre.new( Array(String).new()).to_json
+        end.to raise_error(ArgumentError)
+
+        # we should allow max_selectable to include all our genres
+        expect do
+          Catalog::ExtraGenre.new( genres, max_selectable: genres.size.to_u32 ).to_json
+        end.to_not raise_error
+      end
+
+      it "executes &block only when #to_json is called" do
+        called = 0
+        result = Catalog::ExtraGenre.new do
+          called += 1
+          genres
+        end
+
+        expect(called).to eq(0)
+
+        max_iteration = 2
+        (1..max_iteration).each do |x|
+          expect do
+            result.to_json
+          end.to_not raise_error
+          expect(called).to eq(x)
+        end
+
+        # Just double check that we don't have a bug in our loop
+        expect(called).to eq(max_iteration)
+
+      end
     end
   end
+
+  describe "#class" do
+    subject { Catalog.new(content_type, id, name) }
+    describe "#initialize" do
+      it "can initialize" do
+        expect do
+          subject
+        end.to_not raise_error
+      end
+    end
+
+    it "can be converted to json" do
+      expect(subject.to_json).to eq({"type": content_type.to_s.downcase, "id": id, "name": name}.to_json)
+    end
+    it "has proper getters" do
+      expect(subject.type).to eq(content_type)
+      expect(subject.id).to eq(id)
+      expect(subject.name).to eq(name)
+    end
+  end
+
+#  describe "#extra" do
+#    let(skip) { Catalog::ExtraSkip.new() }
+#    let(search) { Catalog::ExtraSearch.new() }
+#
+#    subject { Catalog.new(content_type, id, name, skip, search) }
+#
+#
+#  end
 end
