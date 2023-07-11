@@ -119,7 +119,33 @@ module Stremio::Addon::DevKit
     # `name`: **required** - string, human readable name of the catalog
     getter name : String
 
-    def initialize(@type, @id, @name)
+    @[JSON::Field(ignore: true)]
+    getter skip : ExtraSkip?
+
+    @[JSON::Field(ignore: true)]
+    getter genre : ExtraGenre?
+
+    @[JSON::Field(ignore: true)]
+    getter search : ExtraSearch?
+
+    @[JSON::FakeField]
+    def extra(json : ::JSON::Builder) : Nil
+      json.array do
+        add_extras(json)
+      end
+    end
+
+    # Returns nothing
+    #
+    # Allows the addition of entries in the "extra:[]"
+    #
+    protected def add_extras(json : ::JSON::Builder) : Nil
+      skip.as(ExtraSkip).to_json(json) if skip.is_a?(ExtraSkip)
+      genre.as(ExtraGenre).to_json(json) if genre.is_a?(ExtraGenre)
+      search.as(ExtraSearch).to_json(json) if search.is_a?(ExtraSearch)
+    end
+
+    def initialize(@type, @id, @name, @skip = nil, @genre = nil, @search = nil)
     end
   end
 end

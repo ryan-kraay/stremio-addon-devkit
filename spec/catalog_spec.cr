@@ -134,31 +134,44 @@ Spectator.describe Stremio::Addon::DevKit::Catalog do
   end
 
   describe "#class" do
-    subject { Catalog.new(content_type, id, name) }
+    let(genres) { ["Action", "Comedy", "Sci-Fi"] }
+    let(skip) { Catalog::ExtraSkip.new() }
+    let(search) { Catalog::ExtraSearch.new() }
+    let(genre) { Catalog::ExtraGenre.new genres }
+
+    subject(catalog_extra) { Catalog.new(content_type, id, name, skip, genre, search) }
+    subject(catalog) { Catalog.new(content_type, id, name) }
     describe "#initialize" do
       it "can initialize" do
         expect do
-          subject
+          catalog
         end.to_not raise_error
       end
     end
 
     it "can be converted to json" do
-      expect(subject.to_json).to eq({"type": content_type.to_s.downcase, "id": id, "name": name}.to_json)
+      expect(catalog.to_json).to eq({"type": content_type.to_s.downcase, "id": id, "name": name, "extra": Array(String).new()}.to_json)
     end
+    it "can convert #extra into json" do
+      expected = {
+        "type": content_type.to_s.downcase,
+        "id": id,
+        "name": name,
+        "extra": [
+          { "name": "skip", "isRequired": false },
+          { "name": "genre", "isRequired": false, "optionsLimit": 1, "options": genres },
+          { "name": "search", "isRequired": false}
+        ]
+      }.to_json
+
+      expect(catalog_extra.to_json).to eq(expected)
+    end
+
     it "has proper getters" do
-      expect(subject.type).to eq(content_type)
-      expect(subject.id).to eq(id)
-      expect(subject.name).to eq(name)
+      expect(catalog.type).to eq(content_type)
+      expect(catalog.id).to eq(id)
+      expect(catalog.name).to eq(name)
     end
   end
 
-  #  describe "#extra" do
-  #    let(skip) { Catalog::ExtraSkip.new() }
-  #    let(search) { Catalog::ExtraSearch.new() }
-  #
-  #    subject { Catalog.new(content_type, id, name, skip, search) }
-  #
-  #
-  #  end
 end
