@@ -86,23 +86,25 @@ Spectator.describe Stremio::Addon::DevKit::Catalog do
       end
     end
     describe "#to_json" do
-      it "raises an exceptions for invalid inputs" do
-        # cannot have zero max_selectable_genres
+      it "cannot have zero max_selectable_genres" do
         expect do
           Catalog::ExtraGenre.new(genres, max_selectable: 0).to_json
         end.to raise_error(ArgumentError)
+      end
 
-        # cannot have more selectable_genres than genres
+      it "cannot have more selectable_genres than genres" do
         expect do
           Catalog::ExtraGenre.new(genres, max_selectable: (genres.size + 1).to_u32).to_json
         end.to raise_error(ArgumentError)
+      end
 
-        # Likewise, this means empty genres are not allowed
+      it "cannot have empty genres" do
         expect do
           Catalog::ExtraGenre.new(Array(String).new).to_json
         end.to raise_error(ArgumentError)
+      end
 
-        # we should allow max_selectable to include all our genres
+      it "allows max_selectable to include all our genres" do
         expect do
           Catalog::ExtraGenre.new(genres, max_selectable: genres.size.to_u32).to_json
         end.to_not raise_error
