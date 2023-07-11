@@ -135,8 +135,8 @@ Spectator.describe Stremio::Addon::DevKit::Catalog do
 
   describe "#class" do
     let(genres) { ["Action", "Comedy", "Sci-Fi"] }
-    let(skip) { Catalog::ExtraSkip.new() }
-    let(search) { Catalog::ExtraSearch.new() }
+    let(skip) { Catalog::ExtraSkip.new }
+    let(search) { Catalog::ExtraSearch.new }
     let(genre) { Catalog::ExtraGenre.new genres }
 
     subject(catalog_extra) { Catalog.new(content_type, id, name, skip, genre, search) }
@@ -150,18 +150,18 @@ Spectator.describe Stremio::Addon::DevKit::Catalog do
     end
 
     it "can be converted to json" do
-      expect(catalog.to_json).to eq({"type": content_type.to_s.downcase, "id": id, "name": name, "extra": Array(String).new()}.to_json)
+      expect(catalog.to_json).to eq({"type": content_type.to_s.downcase, "id": id, "name": name, "extra": Array(String).new}.to_json)
     end
     it "can convert #extra into json" do
       expected = {
-        "type": content_type.to_s.downcase,
-        "id": id,
-        "name": name,
+        "type":  content_type.to_s.downcase,
+        "id":    id,
+        "name":  name,
         "extra": [
-          { "name": "skip", "isRequired": false },
-          { "name": "genre", "isRequired": false, "optionsLimit": 1, "options": genres },
-          { "name": "search", "isRequired": false}
-        ]
+          {"name": "skip", "isRequired": false},
+          {"name": "genre", "isRequired": false, "optionsLimit": 1, "options": genres},
+          {"name": "search", "isRequired": false},
+        ],
       }.to_json
 
       expect(catalog_extra.to_json).to eq(expected)
@@ -173,5 +173,4 @@ Spectator.describe Stremio::Addon::DevKit::Catalog do
       expect(catalog.name).to eq(name)
     end
   end
-
 end
