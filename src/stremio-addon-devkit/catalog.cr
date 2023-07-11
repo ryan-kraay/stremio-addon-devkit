@@ -96,19 +96,18 @@ module Stremio::Addon::DevKit
         g.to_json(json)
       end
 
-
       # `genres` - **required** a list of genres or other tags that the user can filter/select from
       # **NOTE**:  The list of genres is only generated when creating a manfiest.  Afterwards, this list of genres cannot be changed (unless the addon is
       #  reinstalled)
       @[JSON::Field(ignore: true)]
       getter genres : GenresResultType | GenresProcType
 
-      def initialize( @genres : GenresResultType | GenresProcType , @isRequired = false, max_selectable : UInt32 = 1 )
+      def initialize(@genres : GenresResultType | GenresProcType, @isRequired = false, max_selectable : UInt32 = 1)
         @name = ExtraType::Genre
         @optionsLimit = max_selectable
       end
 
-      def initialize( isRequired = false, max_selectable : UInt32 = 1, &block : -> GenresResultType )
+      def initialize(isRequired = false, max_selectable : UInt32 = 1, &block : -> GenresResultType)
         initialize(block, isRequired, max_selectable)
       end
     end
@@ -119,7 +118,6 @@ module Stremio::Addon::DevKit
     getter id : String
     # `name`: **required** - string, human readable name of the catalog
     getter name : String
-
 
     def initialize(@type, @id, @name)
     end

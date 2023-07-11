@@ -67,14 +67,16 @@ Spectator.describe Stremio::Addon::DevKit::Catalog do
   end
 
   describe "ExtraGenre" do
-    let(genres) { ["Action", "Comedy", "Sci-Fi" ] }
+    let(genres) { ["Action", "Comedy", "Sci-Fi"] }
     describe "#initialize" do
       it "accepts a list of genres" do
         result = Catalog::ExtraGenre.new genres
-        expect(result.to_json).to eq({"name": "genre", "isRequired": false,"optionsLimit": 1, "options": genres }.to_json)
+        expect(result.to_json).to eq({"name": "genre", "isRequired": false, "optionsLimit": 1, "options": genres}.to_json)
       end
       it "accepts a block" do
-        result = Catalog::ExtraGenre.new do genres end
+        result = Catalog::ExtraGenre.new do
+          genres
+        end
         expect(result.to_json).to eq({"name": "genre", "isRequired": false, "optionsLimit": 1, "options": genres}.to_json)
       end
       it "allows multiple genre's to be chosen" do
@@ -92,17 +94,17 @@ Spectator.describe Stremio::Addon::DevKit::Catalog do
 
         # cannot have more selectable_genres than genres
         expect do
-          Catalog::ExtraGenre.new( genres, max_selectable: (genres.size + 1).to_u32).to_json
+          Catalog::ExtraGenre.new(genres, max_selectable: (genres.size + 1).to_u32).to_json
         end.to raise_error(ArgumentError)
 
         # Likewise, this means empty genres are not allowed
         expect do
-          Catalog::ExtraGenre.new( Array(String).new()).to_json
+          Catalog::ExtraGenre.new(Array(String).new).to_json
         end.to raise_error(ArgumentError)
 
         # we should allow max_selectable to include all our genres
         expect do
-          Catalog::ExtraGenre.new( genres, max_selectable: genres.size.to_u32 ).to_json
+          Catalog::ExtraGenre.new(genres, max_selectable: genres.size.to_u32).to_json
         end.to_not raise_error
       end
 
@@ -125,7 +127,6 @@ Spectator.describe Stremio::Addon::DevKit::Catalog do
 
         # Just double check that we don't have a bug in our loop
         expect(called).to eq(max_iteration)
-
       end
     end
   end
@@ -150,12 +151,12 @@ Spectator.describe Stremio::Addon::DevKit::Catalog do
     end
   end
 
-#  describe "#extra" do
-#    let(skip) { Catalog::ExtraSkip.new() }
-#    let(search) { Catalog::ExtraSearch.new() }
-#
-#    subject { Catalog.new(content_type, id, name, skip, search) }
-#
-#
-#  end
+  #  describe "#extra" do
+  #    let(skip) { Catalog::ExtraSkip.new() }
+  #    let(search) { Catalog::ExtraSearch.new() }
+  #
+  #    subject { Catalog.new(content_type, id, name, skip, search) }
+  #
+  #
+  #  end
 end
