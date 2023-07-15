@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Crystal Docs 1.8.2">
+<meta name="crystal_docs.project_version" content="main">
+<meta name="crystal_docs.project_name" content="stremio-addon-devkit">
+
+
+
+<link href="../../../../../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../../../../js/doc.js"></script>
+
+  <meta name="repository-name" content="stremio-addon-devkit">
+  <title>Stremio::Addon::DevKit::UserData::KeyRing::Opt - stremio-addon-devkit main</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../../../../../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<input type="checkbox" id="sidebar-btn">
+<label for="sidebar-btn" id="sidebar-btn-label">
+  <svg class="open" xmlns="http://www.w3.org/2000/svg" height="2em" width="2em" viewBox="0 0 512 512"><title>Open Sidebar</title><path fill="currentColor" d="M80 96v64h352V96H80zm0 112v64h352v-64H80zm0 112v64h352v-64H80z"></path></svg>
+  <svg class="close" xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512"><title>Close Sidebar</title><path fill="currentColor" d="m118.6 73.4-45.2 45.2L210.7 256 73.4 393.4l45.2 45.2L256 301.3l137.4 137.3 45.2-45.2L301.3 256l137.3-137.4-45.2-45.2L256 210.7Z"></path></svg>
+</label>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../../../../../index.html">
+          stremio-addon-devkit
+        </a>
+      </h1>
+
+      <span class="project-version">
+        main
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="stremio-addon-devkit/Stremio" data-name="stremio">
+      <a href="../../../../../Stremio.html">Stremio</a>
+      
+        <ul>
+  
+  <li class="parent open current" data-id="stremio-addon-devkit/Stremio/Addon" data-name="stremio::addon">
+      <a href="../../../../../Stremio/Addon.html">Addon</a>
+      
+        <ul>
+  
+  <li class="parent open current" data-id="stremio-addon-devkit/Stremio/Addon/DevKit" data-name="stremio::addon::devkit">
+      <a href="../../../../../Stremio/Addon/DevKit.html">DevKit</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/Catalog" data-name="stremio::addon::devkit::catalog(contentt)">
+      <a href="../../../../../Stremio/Addon/DevKit/Catalog.html">Catalog</a>
+      
+        <ul>
+  
+  <li class="parent " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/Catalog/ExtraGenre" data-name="stremio::addon::devkit::catalog::extragenre">
+      <a href="../../../../../Stremio/Addon/DevKit/Catalog/ExtraGenre.html">ExtraGenre</a>
+      
+        <ul>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/Catalog/ExtraGenre/GenresProcType" data-name="stremio::addon::devkit::catalog::extragenre::genresproctype">
+      <a href="../../../../../Stremio/Addon/DevKit/Catalog/ExtraGenre/GenresProcType.html">GenresProcType</a>
+      
+    </li>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/Catalog/ExtraGenre/GenresResultType" data-name="stremio::addon::devkit::catalog::extragenre::genresresulttype">
+      <a href="../../../../../Stremio/Addon/DevKit/Catalog/ExtraGenre/GenresResultType.html">GenresResultType</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/Catalog/ExtraSearch" data-name="stremio::addon::devkit::catalog::extrasearch">
+      <a href="../../../../../Stremio/Addon/DevKit/Catalog/ExtraSearch.html">ExtraSearch</a>
+      
+    </li>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/Catalog/ExtraSkip" data-name="stremio::addon::devkit::catalog::extraskip">
+      <a href="../../../../../Stremio/Addon/DevKit/Catalog/ExtraSkip.html">ExtraSkip</a>
+      
+    </li>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/Catalog/ExtraType" data-name="stremio::addon::devkit::catalog::extratype">
+      <a href="../../../../../Stremio/Addon/DevKit/Catalog/ExtraType.html">ExtraType</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/ContentType" data-name="stremio::addon::devkit::contenttype">
+      <a href="../../../../../Stremio/Addon/DevKit/ContentType.html">ContentType</a>
+      
+    </li>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/DB" data-name="stremio::addon::devkit::db(t)">
+      <a href="../../../../../Stremio/Addon/DevKit/DB.html">DB</a>
+      
+    </li>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/SQLite3" data-name="stremio::addon::devkit::sqlite3(t)">
+      <a href="../../../../../Stremio/Addon/DevKit/SQLite3.html">SQLite3</a>
+      
+    </li>
+  
+  <li class="parent open current" data-id="stremio-addon-devkit/Stremio/Addon/DevKit/UserData" data-name="stremio::addon::devkit::userdata">
+      <a href="../../../../../Stremio/Addon/DevKit/UserData.html">UserData</a>
+      
+        <ul>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/UserData/HeaderMalformed" data-name="stremio::addon::devkit::userdata::headermalformed">
+      <a href="../../../../../Stremio/Addon/DevKit/UserData/HeaderMalformed.html">HeaderMalformed</a>
+      
+    </li>
+  
+  <li class="parent open current" data-id="stremio-addon-devkit/Stremio/Addon/DevKit/UserData/KeyRing" data-name="stremio::addon::devkit::userdata::keyring">
+      <a href="../../../../../Stremio/Addon/DevKit/UserData/KeyRing.html">KeyRing</a>
+      
+        <ul>
+  
+  <li class=" current" data-id="stremio-addon-devkit/Stremio/Addon/DevKit/UserData/KeyRing/Opt" data-name="stremio::addon::devkit::userdata::keyring::opt">
+      <a href="../../../../../Stremio/Addon/DevKit/UserData/KeyRing/Opt.html">Opt</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/UserData/KeyRingCSV" data-name="stremio::addon::devkit::userdata::keyringcsv">
+      <a href="../../../../../Stremio/Addon/DevKit/UserData/KeyRingCSV.html">KeyRingCSV</a>
+      
+    </li>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/UserData/KeyRingSecret" data-name="stremio::addon::devkit::userdata::keyringsecret">
+      <a href="../../../../../Stremio/Addon/DevKit/UserData/KeyRingSecret.html">KeyRingSecret</a>
+      
+    </li>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/UserData/Session" data-name="stremio::addon::devkit::userdata::session(t)">
+      <a href="../../../../../Stremio/Addon/DevKit/UserData/Session.html">Session</a>
+      
+    </li>
+  
+  <li class="parent " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/UserData/V1" data-name="stremio::addon::devkit::userdata::v1(t)">
+      <a href="../../../../../Stremio/Addon/DevKit/UserData/V1.html">V1</a>
+      
+        <ul>
+  
+  <li class=" " data-id="stremio-addon-devkit/Stremio/Addon/DevKit/UserData/V1/Header" data-name="stremio::addon::devkit::userdata::v1::header">
+      <a href="../../../../../Stremio/Addon/DevKit/UserData/V1/Header.html">Header</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">enum</span> Stremio::Addon::DevKit::UserData::KeyRing::Opt
+
+</h1>
+
+
+
+
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>This is an internal flag, which means we do NOT want to use the <code><a href="../../../../../Stremio/Addon/DevKit/UserData/KeyRing.html">KeyRing</a></code></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      <a href="https://github.com/ryan-kraay/stremio-addon-devkit/blob/bc52909f1f240edb95f4476c4a97e8755ba843c5/src/stremio-addon-devkit/userdata/keyring.cr#L40" target="_blank">
+        stremio-addon-devkit/userdata/keyring.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+  
+    <h2>
+      <a id="enum-members" class="anchor" href="#enum-members">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Enum Members
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="Disable">
+        <strong>Disable</strong> = <code><span class="n">7</span></code>
+      </dt>
+      
+    
+  </dl>
+
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#disable%3F-instance-method" class="signature"><strong>#disable?</strong></a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+<div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="disable?-instance-method">
+      <div class="signature">
+        
+        def <strong>disable?</strong>
+
+        <a class="method-permalink" href="#disable%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/ryan-kraay/stremio-addon-devkit/blob/bc52909f1f240edb95f4476c4a97e8755ba843c5/src/stremio-addon-devkit/userdata/keyring.cr#L41" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+</div>
+
+</body>
+</html>
