@@ -17,7 +17,7 @@ module Stremio::Addon::DevKit
 
   # A Manifest consists of a collection of ResoruceType's
   #  Source: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md
-  class Manifest(ResourceT, ContentT)
+  class Manifest(ResourceT)
     include JSON::Serializable
     include JSON::Serializable::Fake
 
@@ -78,6 +78,9 @@ module Stremio::Addon::DevKit
       json.array do
         # TODO: Iterate through everything that has idPrefixes and merge them into this list
       end
+    end
+
+    def initialize(@id, @name, @description, @version)
     end
   end
 
