@@ -2,7 +2,6 @@ require "json"
 require "json-serializable-fake"
 
 module Stremio::Addon::DevKit
-
   # This should be customized based on *your* addon
   #  See: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md#filtering-properties
   #
@@ -10,10 +9,10 @@ module Stremio::Addon::DevKit
   # NOTE:  These values **must** correspond to the names used in the url (ie: /<userdata>/meta/<content-type>/..., /catalog/<content-type>/...)
   enum ResourceType
     Catalog
-#    Meta # confirmed
-#    Stream # confirmed
-#    Subtitles
-#    Addon_catalog
+    #    Meta # confirmed
+    #    Stream # confirmed
+    #    Subtitles
+    #    Addon_catalog
   end
 
   # Represents a single entry in the "resources: []" described in the manifest.json
@@ -26,7 +25,6 @@ module Stremio::Addon::DevKit
   class ManifestResource(ContentT, ResourceT)
     include JSON::Serializable
     include JSON::Serializable::Fake
-
 
     # `name`: **required** - string, the name of the resource
     getter name : ResourceT
@@ -81,7 +79,7 @@ module Stremio::Addon::DevKit
     #
     # URL's take the form of: https://you.domain/<userdata?>/<resource_type>/<content_type>/<content-specific-data/...
     #
-    # Due to these edge-cases, we've created the following 
+    # Due to these edge-cases, we've created the following
     # TODO: {
     #        "name": "meta",
     #        "types": ["movie"],
@@ -92,12 +90,12 @@ module Stremio::Addon::DevKit
       {% properties = {} of Nil => Nil %}
       {% for ann in list %}
         {% unless ann[:ignore] %}
-          {% plural_form = ( (ann && ann[:plural_name]) || "#{ann[:enum].names[-1].id}s".downcase ) %}
+          {% plural_form = ((ann && ann[:plural_name]) || "#{ann[:enum].names[-1].id}s".downcase) %}
           {%
-            properties[ ann[:enum].id ] = {
-              plural_name: plural_form.stringify,
-              property_name: ( (ann && ann[:property_name]) || plural_form ).id,
-              class: ann[:as]
+            properties[ann[:enum].id] = {
+              plural_name:   plural_form.stringify,
+              property_name: ((ann && ann[:property_name]) || plural_form).id,
+              class:         ann[:as],
             }
           %}
         {% end %}
@@ -140,27 +138,26 @@ module Stremio::Addon::DevKit
       end
     end
 
-    #@[JSON::FakeField]
-    #def meta(json : ::JSON::Builder) : Nil
+    # @[JSON::FakeField]
+    # def meta(json : ::JSON::Builder) : Nil
     #  # TODO:  See https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/meta.md
     #  # TODO:  See https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/requests/defineMetaHandler.md
-    #end
+    # end
 
-    #@[JSON::FakeField]
-    #def streams(json : ::JSON::Builder) : Nil
+    # @[JSON::FakeField]
+    # def streams(json : ::JSON::Builder) : Nil
     #  # TODO:  See https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/stream.md
-    #end
+    # end
 
-    #@[JSON::FakeField]
-    #def subtitles(json : ::JSON::Builder) : Nil
+    # @[JSON::FakeField]
+    # def subtitles(json : ::JSON::Builder) : Nil
     #  # TOOD:  See https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/subtitles.md
-    #end
+    # end
 
-    #@[JSON::FakeField]
-    #def addonCatalogs(json : ::JSON::Builder) : Nil
+    # @[JSON::FakeField]
+    # def addonCatalogs(json : ::JSON::Builder) : Nil
     #  # TODO:  See https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md#addon-catalogs
-    #end
-
+    # end
 
     @[JSON::FakeField]
     def idPrefixes(json : ::JSON::Builder) : Nil
@@ -174,8 +171,6 @@ module Stremio::Addon::DevKit
   end
 
   class Manifest(ContentT) < ManifestBase
-    bind_resources(ResourceType, ContentT, [ { enum: ResourceType::Catalog, as: Catalog(ContentT) } ] )
+    bind_resources(ResourceType, ContentT, [{enum: ResourceType::Catalog, as: Catalog(ContentT)}])
   end
-
 end
-

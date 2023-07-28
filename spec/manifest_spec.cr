@@ -40,24 +40,22 @@ Spectator.describe Stremio::Addon::DevKit::Manifest do
     it "generates json" do
       empty_array = Array(String).new
 
-      expect( subject.to_json).to eq({"id": id, "name": name, "description": description, "version": version, "catalogs": empty_array, "resources": empty_array, "types": empty_array, "idPrefixes": empty_array}.to_json )
+      expect(subject.to_json).to eq({"id": id, "name": name, "description": description, "version": version, "catalogs": empty_array, "resources": empty_array, "types": empty_array, "idPrefixes": empty_array}.to_json)
     end
 
     it "populates resources and types based, when catalogs are added" do
       s = subject
 
       # No catalogs:  These fields will be empty
-      expect( mini_json { |j| s.resources j }).to eq(Array(String).new.to_json)
-      expect( mini_json { |j| s.types j }).to eq(Array(String).new.to_json)
+      expect(mini_json { |j| s.resources j }).to eq(Array(String).new.to_json)
+      expect(mini_json { |j| s.types j }).to eq(Array(String).new.to_json)
 
       # Now add an entry
       s.catalogs << catalog
 
       # as we've included an entry in our catalogs, it should now be populated
-      expect( mini_json { |json| s.resources json } ).to eq([ { "name": "catalog", "types": [ catalog_type ]}].to_json)
-      expect( mini_json { |json| s.types json } ).to eq([catalog_type].to_json)
+      expect(mini_json { |json| s.resources json }).to eq([{"name": "catalog", "types": [catalog_type]}].to_json)
+      expect(mini_json { |json| s.types json }).to eq([catalog_type].to_json)
     end
   end
-
-
 end
