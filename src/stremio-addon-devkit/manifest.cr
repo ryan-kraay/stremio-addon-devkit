@@ -130,17 +130,11 @@ module Stremio::Addon::DevKit
       @[JSON::FakeField]
       def types(json : ::JSON::Builder) : Nil
         # Iterate through all resource_types and get the content_type
-        # TODO: this assumes all resource_types have a method called "types"
         type_set = Set( {{ content_type }} ).new
 
-        {% for resource_enum, prop in properties %}
-          # TODO:  This doesn't work... an alternative would be to add the method name to our properties (and default to .type)
-          #{ if prop[:class].resolve.has_method?(:type) %}
-            {{ prop[:property_name] }}.each do |x|
-              type_set << x.type
-            end
-          #{ end %}
-        {% end %}
+        resources.each do |resource|
+          type_set.concat resource.types
+        end
 
         type_set.to_json json
       end
