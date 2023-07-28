@@ -51,7 +51,7 @@ module Stremio::Addon::DevKit
     end
   end
 
-  # A Manifest consists of a collection of ResoruceType's
+  # A Manifest consists of a collection of ResourceTypes
   #  Source: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md
   class ManifestBase
     include JSON::Serializable
