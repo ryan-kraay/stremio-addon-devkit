@@ -145,6 +145,11 @@ module Stremio::Addon::DevKit
       search.as(ExtraSearch).to_json(json) if search.is_a?(ExtraSearch)
     end
 
+    # Updates manifest_resource (which is of type ManifestResource) with the relevant information from this Catalog
+    def insert_resource(manifest_resource) : Nil
+      manifest_resource.types.add type
+    end
+
     def initialize(@type, @id, @name, @skip = nil, @genre = nil, @search = nil)
     end
   end
