@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../src/stremio-addon-devkit/catalog"
+require "../../src/stremio-addon-devkit/catalog"
 
 Spectator.describe Stremio::Addon::DevKit::Catalog do
   alias Catalog = Stremio::Addon::DevKit::Catalog
