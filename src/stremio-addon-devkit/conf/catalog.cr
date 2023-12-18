@@ -1,7 +1,7 @@
 require "json"
 require "json-serializable-fake"
 
-module Stremio::Addon::DevKit
+module Stremio::Addon::DevKit::Conf
   # These are the possible content types supported by Stremio, you can prune or expand this to fit your needs
   #  See: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/content.types.md
   enum ContentType

@@ -1,9 +1,9 @@
 require "./spec_helper"
-require "../../src/stremio-addon-devkit/catalog"
+require "../../src/stremio-addon-devkit/conf/catalog"
 
-Spectator.describe Stremio::Addon::DevKit::Catalog do
-  alias Catalog = Stremio::Addon::DevKit::Catalog
-  alias ContentType = Stremio::Addon::DevKit::ContentType
+Spectator.describe Stremio::Addon::DevKit::Conf::Catalog do
+  alias Catalog = Stremio::Addon::DevKit::Conf::Catalog
+  alias ContentType = Stremio::Addon::DevKit::Conf::ContentType
 
   let(id) { "hello" }
   let(name) { "Hello Channel" }
