@@ -1,7 +1,7 @@
 require "json"
 require "json-serializable-fake"
 
-module Stremio::Addon::DevKit
+module Stremio::Addon::DevKit::Conf
   # This should be customized based on *your* addon
   #  See: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md#filtering-properties
   #
@@ -110,7 +110,7 @@ module Stremio::Addon::DevKit
 
         {% for resource_enum, prop in properties %}
           manifest_resource = ManifestResource( {{ content_type }}, {{ resource_type }} ).new {{ resource_enum }}
-          ::Stremio::Addon::DevKit.asResource(manifest_resource, {{ prop[:property_name] }} )
+          ::Stremio::Addon::DevKit::Conf.asResource(manifest_resource, {{ prop[:property_name] }} )
           # manifest_resource.types **cannot** be empty, unless we don't have any prop[:property_name]... hence we check if idPrefixes has content.
           # if it has content, this means it's a bug in asResource().  If it's empty, it simply means we don't have any of this type
           raise ArgumentError.new("ManifestResource types:[] for {{ prop[:property_name] }} cannot be empty") if manifest_resource.types.empty? && !manifest_resource.idPrefixes.empty?

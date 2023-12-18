@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../src/stremio-addon-devkit/userdata/v1"
+require "../../src/stremio-addon-devkit/userdata/v1"
 
 # A class which will expose protected methods for unit testing
 class V1Exposed(T) < Stremio::Addon::DevKit::UserData::V1(T)
