@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../src/stremio-addon-devkit/userdata/v1"
+require "../../src/stremio-addon-devkit/userdata/v1"
 require "io/memory"
 
 Spectator.describe Stremio::Addon::DevKit::UserData::V1::Header do

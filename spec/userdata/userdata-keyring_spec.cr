@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../src/stremio-addon-devkit/userdata/keyring"
+require "../../src/stremio-addon-devkit/userdata/keyring"
 
 Spectator.describe Stremio::Addon::DevKit::UserData::KeyRing do
   alias UserData = Stremio::Addon::DevKit::UserData

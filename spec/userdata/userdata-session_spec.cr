@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../src/stremio-addon-devkit/userdata/session"
+require "../../src/stremio-addon-devkit/userdata/session"
 
 Spectator.describe Stremio::Addon::DevKit::UserData::Session do
   alias UserData = Stremio::Addon::DevKit::UserData
