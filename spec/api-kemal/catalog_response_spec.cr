@@ -1,6 +1,5 @@
 require "./spec_helper"
 require "../../src/stremio-addon-devkit/api/catalog_response"
-require "../../src/stremio-addon-devkit/conf/manifest"
 
 get "/" do
   "Hello World!"
@@ -24,7 +23,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::CatalogResponse do
 
   it "can be constructed" do
     expect do
-      CatalogResponse.new(manifest, manifest.catalogs[0], nil)
+      CatalogResponse.new(manifest, manifest.catalogs[0])
     end.to_not raise_error
   end
 end

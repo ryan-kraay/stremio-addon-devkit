@@ -8,7 +8,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   alias ManifestHandler = Stremio::Addon::DevKit::Api::ManifestHandler
   alias Conf = Stremio::Addon::DevKit::Conf
 
-  let(manifest) { Conf::Manifest(Conf::ContentType).build(
+  let(manifest) { Conf::Manifest.build(
         id: "com.stremio.addon.example",
         name: "DemoAddon",
         description: "An example stremio addon",
@@ -32,16 +32,14 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
 
   describe "#route_catalogs" do
     it "creates a catalog.json endpoint" do
-      expect(true).to eq(true)
-#      accessed = false
-#      router.route_catalogs(manifest) do
-#      #|env, catalog|
-#        accessed = true
-#      end
-#
-#      get "/catalog/movie/movie4u.json"
-#      expect(accessed).to eq true
-#      # TODO check response.body
+      accessed = false
+      router.route_catalogs(manifest) do |env, addon|
+        accessed = true
+      end
+
+      get "/catalog/movie/movie4u.json"
+      expect(accessed).to eq true
+      # TODO check response.body
     end
   end
 end
