@@ -27,7 +27,7 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
   describe "#initialize" do
     it "can exist" do
       expect do
-        Manifest(ContentType).new(id: id, name: name, description: description, version: version)
+        Manifest.new(id: id, name: name, description: description, version: version)
       end.to_not raise_error
     end
   end
@@ -35,7 +35,7 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
   describe "#to_json" do
     let(catalog_type) { ContentType::Movie }
     let(catalog) { Catalog.new(catalog_type, "movie4u", "Movies for you") }
-    subject { Manifest(ContentType).new(id, name, description, version) }
+    subject { Manifest.new(id, name, description, version) }
 
     it "generates json" do
       empty_array = Array(String).new
