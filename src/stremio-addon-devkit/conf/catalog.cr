@@ -2,7 +2,7 @@ require "json"
 require "json-serializable-fake"
 
 module Stremio::Addon::DevKit::Conf
-  # These are the possible content types supported by Stremio, you can prune or expand this to fit your needs
+  # These are the possible content types supported by Stremio
   #  See: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/content.types.md
   enum ContentType
     # `movie`: movie has metadata like name, genre, description, director, actors, images, etc.
@@ -16,7 +16,7 @@ module Stremio::Addon::DevKit::Conf
   end
 
   @[JSON::Serializable::Options(ignore_deserialize: true)]
-  class Catalog(ContentT)
+  class Catalog
     include JSON::Serializable
     include JSON::Serializable::Fake
 
@@ -113,7 +113,7 @@ module Stremio::Addon::DevKit::Conf
     end
 
     # `type`: **required** - string, this is the content type of the catalog
-    getter type : ContentT
+    getter type : ContentType
     # `id`: **required** - string, the id of the catalog, can be any unique string describing the catalog (unique per addon, as an addon can have many catalogs), for example: if the catalog name is "Favourite Youtube Videos", the id can be "fav_youtube_videos"
     getter id : String
     # `name`: **required** - string, human readable name of the catalog

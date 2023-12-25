@@ -13,7 +13,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::CatalogResponse do
   alias CatalogResponse = Stremio::Addon::DevKit::Api::CatalogResponse
   alias Conf = Stremio::Addon::DevKit::Conf
 
-  let(manifest) { Conf::Manifest(Conf::ContentType).build(
+  let(manifest) { Conf::Manifest.build(
                        id: "com.stremio.addon.example",
                        name: "DemoAddon",
                        description: "An example stremio addon",
