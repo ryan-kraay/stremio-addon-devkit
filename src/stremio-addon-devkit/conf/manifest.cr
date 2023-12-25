@@ -103,6 +103,7 @@ module Stremio::Addon::DevKit::Conf
 
       {% for resource_enum, prop in properties %}
         property {{ prop[:property_name] }} = [] of {{ prop[:class] }}
+        #alias CatalogType = {{ prop[:class] }}.elem_type()
       {% end %}
 
       def resources() : Array(ManifestResource( {{ content_type }}, {{ resource_type }} ))
@@ -172,5 +173,28 @@ module Stremio::Addon::DevKit::Conf
 
   class Manifest(ContentT) < ManifestBase
     bind_resources(ResourceType, ContentT, [{enum: ResourceType::Catalog, as: Catalog(ContentT)}])
+
+    #alias CatalogType = Catalog(ContentT)
+
+    # A static function call to inline the complete construction
+    # of a manifest object.
+    #
+    # Example:
+    # ```
+    # manifest = Manifest(ContentType).build(
+    #                 id: "com.stremio.addon.example",
+    #                 name: "DemoAddon",
+    #                 description: "An example stremio addon",
+    #                 version: "0.0.1") do |conf|
+    #   conf.catalogs << Catalog.new(ContentType::Movie, "movie4u", "Movies for you")
+    # end
+    # ```
+    #
+    # TODO:  Should this be moved into the macro?  As a method on .new()?
+    def self.build(*args, **named_args, &)
+      manifest = Manifest(ContentT).new(*args, **named_args)
+      yield manifest
+      return manifest
+    end
   end
 end

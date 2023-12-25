@@ -30,6 +30,21 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
         Manifest(ContentType).new(id: id, name: name, description: description, version: version)
       end.to_not raise_error
     end
+
+    it "can be constructed inline" do
+      ran_callback = false
+      expected_catalog_id = "movie4u"
+
+      # Suitable for inline constructing within unit tests
+      subject = Manifest(ContentType).build(id, name, description, version) do |conf|
+        ran_callback = true
+        conf.catalogs << Catalog.new(ContentType::Movie, expected_catalog_id, "Movies for you")
+      end
+
+      expect(ran_callback).to eq(true)
+      expect(subject.name).to eq(name)
+      expect(subject.catalogs[0].id).to eq(expected_catalog_id)
+    end
   end
 
   describe "#to_json" do
