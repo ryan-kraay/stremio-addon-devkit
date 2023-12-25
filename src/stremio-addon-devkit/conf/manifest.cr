@@ -1,5 +1,6 @@
 require "json"
 require "json-serializable-fake"
+require "./catalog"
 
 module Stremio::Addon::DevKit::Conf
   # This should be customized based on *your* addon
@@ -22,14 +23,14 @@ module Stremio::Addon::DevKit::Conf
   #
   # source: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md#advanced
   @[JSON::Serializable::Options(ignore_deserialize: true)]
-  class ManifestResource(ContentT, ResourceT)
+  class ManifestResource
     include JSON::Serializable
     include JSON::Serializable::Fake
 
     # `name`: **required** - string, the name of the resource
-    getter name : ResourceT
+    getter name : ResourceType
     # `types`: **required** - array of strings, supported types, from all the [Content Types](https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/content.types.md)
-    property types : Set(ContentT)
+    property types : Set(ContentType)
     # `idPrefixes`: **optional** - array of strings, use this if you want your addon to be called only for specific content IDs - for example, if you set this to `["yt_id:", "tt"]`, your addon will only be called for id values that start with `yt_id:` or `tt`.
     # NOTE:  This is only relevant for resource_types of `stream` and `meta`.  This should **not** be used for `catalog` resources.
     @[JSON::Field(ignore: true)] # we will render idPrefixes via JSON::FakeField
@@ -41,7 +42,7 @@ module Stremio::Addon::DevKit::Conf
       idPrefixes.to_json json unless idPrefixes.empty?
     end
 
-    def initialize(@name : ResourceT, @types = Set(ContentT).new, @idPrefixes = Set(String).new)
+    def initialize(@name : ResourceType, @types = Set(ContentType).new, @idPrefixes = Set(String).new)
     end
   end
 
@@ -105,11 +106,11 @@ module Stremio::Addon::DevKit::Conf
         property {{ prop[:property_name] }} = [] of {{ prop[:class] }}
       {% end %}
 
-      def resources() : Array(ManifestResource( {{ content_type }}, {{ resource_type }} ))
-        result = [] of ManifestResource( {{ content_type }}, {{ resource_type }} )
+      def resources() : Array(ManifestResource)
+        result = [] of ManifestResource
 
         {% for resource_enum, prop in properties %}
-          manifest_resource = ManifestResource( {{ content_type }}, {{ resource_type }} ).new {{ resource_enum }}
+          manifest_resource = ManifestResource.new {{ resource_enum }}
           ::Stremio::Addon::DevKit::Conf.asResource(manifest_resource, {{ prop[:property_name] }} )
           # manifest_resource.types **cannot** be empty, unless we don't have any prop[:property_name]... hence we check if idPrefixes has content.
           # if it has content, this means it's a bug in asResource().  If it's empty, it simply means we don't have any of this type
@@ -170,7 +171,7 @@ module Stremio::Addon::DevKit::Conf
     end
   end
 
-  class Manifest(ContentT) < ManifestBase
-    bind_resources(ResourceType, ContentT, [{enum: ResourceType::Catalog, as: Catalog(ContentT)}])
+  class Manifest < ManifestBase
+    bind_resources(ResourceType, ContentType, [{enum: ResourceType::Catalog, as: Catalog}])
   end
 end
