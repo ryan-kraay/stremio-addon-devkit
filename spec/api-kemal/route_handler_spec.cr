@@ -13,13 +13,11 @@ Spectator.describe Stremio::Addon::DevKit::Api::RouteHandler do
 
   let(router) { RouteHandler.new }
   before_each do
-    config = Kemal.config
-    config.clear
-    config.env = "test"
-    # All our added handlers need to be added _before_ the setup()
-    # and _after_ the clear()
-    add_handler router
-    config.setup
+    reset_kemal do
+      # All our added handlers need to be added _before_ the setup()
+      # and _after_ the clear()
+      add_handler router
+    end
   end
 
   it "renders globally defined routes" do
@@ -53,8 +51,9 @@ Spectator.describe Stremio::Addon::DevKit::Api::RouteHandler do
   end
 
   it "resets locally defined routes" do
-    get "/local"
-    expect(response.body).to ne "Foobar"
+    expect do
+      get "/local"
+    end.to raise_error(Kemal::Exceptions::RouteNotFound)
   end
 
   it "supports url parameters" do

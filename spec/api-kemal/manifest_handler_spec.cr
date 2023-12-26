@@ -21,14 +21,9 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
 
   let(router) { Api::ManifestHandler.new }
   before_each do
-    config = Kemal.config
-    config.clear
-    config.env = "test"
-    config.always_rescue = false  # supress the kemal error page
-    # All our added handlers need to be added _before_ the setup()
-    # and _after_ the clear()
-    add_handler router
-    config.setup
+    reset_kemal do
+      add_handler router
+    end
   end
 
   describe "#route_catalogs" do
