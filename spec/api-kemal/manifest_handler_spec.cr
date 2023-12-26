@@ -5,7 +5,7 @@ require "./spec_helper"
 Kemal.run
 
 Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
-  alias ManifestHandler = Stremio::Addon::DevKit::Api::ManifestHandler
+  alias Api = Stremio::Addon::DevKit::Api
   alias Conf = Stremio::Addon::DevKit::Conf
 
   let(manifest) { Conf::Manifest.build(
@@ -19,11 +19,12 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
               name: "Movies for you")
         end }
 
-  let(router) { ManifestHandler.new }
+  let(router) { Api::ManifestHandler.new }
   before_each do
     config = Kemal.config
     config.clear
     config.env = "test"
+    config.always_rescue = false  # supress the kemal error page
     # All our added handlers need to be added _before_ the setup()
     # and _after_ the clear()
     add_handler router
@@ -33,13 +34,34 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   describe "#route_catalogs" do
     it "creates a catalog.json endpoint" do
       accessed = false
+      handler = ->( env: HTTP::Server::Context, addon: Api::CatalogResponse ) {
+        print("hello")
+        #accessed = true
+      }
+      #router.route_catalogs(manifest, &handler)
       router.route_catalogs(manifest) do |env, addon|
         accessed = true
       end
 
-      get "/catalog/movie/movie4u.json"
+      get "/catalog/Movie/movie4u.json"
+      expect(response.status_code).to eq(200)
       expect(accessed).to eq true
       # TODO check response.body
+    end
+  end
+
+  describe "#bind" do
+    it "binds a manifest to a callback" do
+      accessed = false
+      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogResponse) {
+        accessed = true
+      }
+
+      router.bind(manifest, catalog_handler: my_catalog_handler)
+
+      get "/catalog/Movie/movie4u.json"
+      expect(response.status.code).to eq(200)
+      expect(accessed).to eq true
     end
   end
 end

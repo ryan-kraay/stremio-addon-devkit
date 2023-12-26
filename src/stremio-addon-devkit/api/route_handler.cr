@@ -10,6 +10,7 @@
 require "http/server/handler"
 require "http/server/context"
 require "radix"
+require "../ext"
 
 module Stremio::Addon::DevKit::Api
 
@@ -69,7 +70,7 @@ module Stremio::Addon::DevKit::Api
       return call_next(context) unless route.found?
 
       # Our context is missing the parameters provided by our route
-  # TODO-rkr    route.params.each { |key, value| context.params.url[key] = unescape_url_param(value) }
+      route.params.each { |key, value| context.params.url[key] = unescape_url_param(value) }
       route.payload.handler.call(context)
     end
 

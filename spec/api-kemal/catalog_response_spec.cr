@@ -1,13 +1,6 @@
 require "./spec_helper"
 require "../../src/stremio-addon-devkit/api/catalog_response"
 
-get "/" do
-  "Hello World!"
-end
-
-Kemal.run
-
-
 Spectator.describe Stremio::Addon::DevKit::Api::CatalogResponse do
   alias CatalogResponse = Stremio::Addon::DevKit::Api::CatalogResponse
   alias Conf = Stremio::Addon::DevKit::Conf
