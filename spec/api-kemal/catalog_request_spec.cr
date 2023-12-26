@@ -1,8 +1,8 @@
 require "./spec_helper"
-require "../../src/stremio-addon-devkit/api/catalog_response"
+require "../../src/stremio-addon-devkit/api/catalog_request"
 
-Spectator.describe Stremio::Addon::DevKit::Api::CatalogResponse do
-  alias CatalogResponse = Stremio::Addon::DevKit::Api::CatalogResponse
+Spectator.describe Stremio::Addon::DevKit::Api::CatalogRequest do
+  alias CatalogRequest = Stremio::Addon::DevKit::Api::CatalogRequest
   alias Conf = Stremio::Addon::DevKit::Conf
 
   let(manifest) { Conf::Manifest.build(
@@ -16,7 +16,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::CatalogResponse do
 
   it "can be constructed" do
     expect do
-      CatalogResponse.new(manifest, manifest.catalogs[0])
+      CatalogRequest.new(manifest, manifest.catalogs[0])
     end.to_not raise_error
   end
 end

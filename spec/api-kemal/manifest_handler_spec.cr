@@ -34,7 +34,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   describe "#route_catalogs" do
     it "creates a catalog.json endpoint" do
       accessed = false
-      handler = ->( env: HTTP::Server::Context, addon: Api::CatalogResponse ) {
+      handler = ->( env: HTTP::Server::Context, addon: Api::CatalogRequest ) {
         print("hello")
         #accessed = true
       }
@@ -53,7 +53,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   describe "#bind" do
     it "binds a manifest to a callback" do
       accessed = false
-      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogResponse) {
+      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogRequest) {
         accessed = true
       }
 
