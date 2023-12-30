@@ -2,8 +2,6 @@ require "./catalog_request"
 
 module Stremio::Addon::DevKit::Api
 
-  class MultiBlockHandlerNotDefined < Exception; end
-
   # Crystal, by design, does not support passing multiple blocks
   # so, we fake it by creating a method, which will capture a block
   class MultiBlockHandler

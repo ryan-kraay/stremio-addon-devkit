@@ -5,6 +5,8 @@ require "./multi_block_handler"
 
 module Stremio::Addon::DevKit::Api
 
+  class ManifestBindingError < Exception; end
+
   class ManifestHandler < RouteHandler
 		alias Conf = Stremio::Addon::DevKit::Conf
 
@@ -25,7 +27,9 @@ module Stremio::Addon::DevKit::Api
       callbacks = MultiBlockHandler.new
       yield callbacks
 
-      unless manifest.catalogs.empty?
+      if !callbacks.catalog? && !manifest.catalogs.empty?
+        raise ManifestBindingError.new("Manifest catalogs defined, but catalog callback was not provided")
+      elsif !manifest.catalogs.empty?
         route_catalogs(manifest, &callbacks.catalog)
       end
 

@@ -85,11 +85,11 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
 			end.to raise_error Radix::Tree::DuplicateError
 		end
 
-#		it "raises an exception when a catalog is provided, but no callback is assigned" do
-#			expect do
-#				router.bind(manifest)
-#			end.to raise_error
-#		end
+		it "raises an exception when a catalog is provided, but no callback is assigned" do
+			expect do
+				router.bind(manifest) { }
+			end.to raise_error Api::ManifestBindingError
+		end
 
 		it "expects callbacks if catalog resources exist" do
   		empty_manifest = Conf::Manifest.new(
