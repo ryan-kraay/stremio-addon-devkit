@@ -27,21 +27,27 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   end
 
   describe "#route_catalogs" do
-    it "creates a catalog.json endpoint" do
+    it "executes a proc when accessing a catalog endpoint" do
       accessed = false
       handler = ->( env: HTTP::Server::Context, addon: Api::CatalogRequest ) {
-        print("hello")
-        #accessed = true
+        accessed = true
       }
-      #router.route_catalogs(manifest, &handler)
+      router.route_catalogs(manifest, &handler)
+
+      get "/catalog/movie/movie4u.json"
+      expect(response.status_code).to eq(200)
+      expect(accessed).to eq true
+    end
+
+    it "executes a block when accessing a catalog endpoint" do
+      accessed = false
       router.route_catalogs(manifest) do |env, addon|
         accessed = true
       end
 
-      get "/catalog/Movie/movie4u.json"
+      get "/catalog/movie/movie4u.json"
       expect(response.status_code).to eq(200)
       expect(accessed).to eq true
-      # TODO check response.body
     end
   end
 
@@ -52,11 +58,49 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
         accessed = true
       }
 
-      router.bind(manifest, catalog_handler: my_catalog_handler)
+      router.bind(manifest) do
+        set_catalog_callback &my_catalog_handler
+      end
 
-      get "/catalog/Movie/movie4u.json"
+      get "/catalog/movie/movie4u.json"
       expect(response.status.code).to eq(200)
       expect(accessed).to eq true
     end
+
+		it "does not allow the same manifest to be rebounded" do
+      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogRequest) { }
+
+			# The first invocation should create all the necessary routes
+			expect do
+				router.bind(manifest) do
+          set_catalog_callback &my_catalog_handler
+        end
+			end.to_not raise_error
+
+      # Second invocation will complain that the routes already exist
+			expect do
+				router.bind(manifest) do
+          set_catalog_callback &my_catalog_handler
+        end
+			end.to raise_error Radix::Tree::DuplicateError
+		end
+
+#		it "raises an exception when a catalog is provided, but no callback is assigned" do
+#			expect do
+#				router.bind(manifest)
+#			end.to raise_error
+#		end
+
+		it "expects callbacks if catalog resources exist" do
+  		empty_manifest = Conf::Manifest.new(
+        id: "com.stremio.addon.example-2",
+        name: "DemoAddon",
+        description: "An example stremio addon",
+        version: "0.0.1")
+			expect do
+				router.bind(empty_manifest) { }
+			end.to_not raise_error
+			
+		end
   end
 end

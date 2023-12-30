@@ -14,6 +14,14 @@ module Stremio::Addon::DevKit::Conf
     #    Stream # confirmed
     #    Subtitles
     #    Addon_catalog
+
+		# source: https://github.com/crystal-lang/crystal/issues/1329#issuecomment-192890286
+    def to_s
+			{% for member in @type.constants %}
+      	return {{member.stringify.downcase}} if self == {{member}}
+    	{% end %}
+    	value.to_s
+  	end
   end
 
   # Represents a single entry in the "resources: []" described in the manifest.json
