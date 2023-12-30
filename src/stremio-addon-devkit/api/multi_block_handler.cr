@@ -6,7 +6,7 @@ module Stremio::Addon::DevKit::Api
 
   # Crystal, by design, does not support passing multiple blocks
   # so, we fake it by creating a method, which will capture a block
-  struct MultiBlockHandler
+  class MultiBlockHandler
 
     macro define_handler(name, request_type)
       @{{name.id}} : (HTTP::Server::Context, {{request_type}} -> Nil) | Nil = nil
@@ -37,7 +37,7 @@ module Stremio::Addon::DevKit::Api
       end
     end
 
-    define_handler(:set_catalog_callback, CatalogRequest)
+    define_handler(:catalog, CatalogRequest)
   end
 
 end

@@ -45,9 +45,9 @@ EOL
     end
 
     it "will fail of callbacks are not defined" do
-      expect(subject.set_catalog_callback?).to eq(false)
+      expect(subject.catalog?).to eq(false)
       expect do
-        subject.set_catalog_callback.call(env, catalog_request)
+        subject.catalog.call(env, catalog_request)
       end.to raise_error TypeCastError
     end
   end
@@ -56,12 +56,12 @@ EOL
     it "is possible to replace the callback with a block" do
       accessed = false
       s = subject
-      s.set_catalog_callback do
+      s.catalog do
         accessed = true
       end
-      expect(s.set_catalog_callback?).to eq(true)
+      expect(s.catalog?).to eq(true)
       expect do
-        s.set_catalog_callback.call(env, catalog_request)
+        s.catalog.call(env, catalog_request)
       end.to_not raise_error
       expect(accessed).to eq(true)
     end
@@ -71,11 +71,11 @@ EOL
       proc = ->( env: HTTP::Server::Context, addon: Api::CatalogRequest) { accessed = true }
 
       s = subject
-      s.set_catalog_callback &proc
+      s.catalog &proc
 
-      expect(s.set_catalog_callback?).to eq(true)
+      expect(s.catalog?).to eq(true)
       expect do
-        s.set_catalog_callback.call(env, catalog_request)
+        s.catalog.call(env, catalog_request)
       end.to_not raise_error
       expect(accessed).to eq(true)
     end

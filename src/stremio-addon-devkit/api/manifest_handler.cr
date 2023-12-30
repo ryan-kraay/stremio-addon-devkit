@@ -22,11 +22,11 @@ module Stremio::Addon::DevKit::Api
     end
 
     def bind(manifest, &block)
-      multihandler = MultiBlockHandler.new
-      with multihandler yield
+      callbacks = MultiBlockHandler.new
+      yield callbacks
 
       unless manifest.catalogs.empty?
-        route_catalogs(manifest, &multihandler.set_catalog_callback)
+        route_catalogs(manifest, &callbacks.catalog)
       end
 
     end

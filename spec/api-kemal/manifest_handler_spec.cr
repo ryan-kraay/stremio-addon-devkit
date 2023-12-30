@@ -58,8 +58,8 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
         accessed = true
       }
 
-      router.bind(manifest) do
-        set_catalog_callback &my_catalog_handler
+      router.bind(manifest) do |callback|
+        callback.catalog &my_catalog_handler
       end
 
       get "/catalog/movie/movie4u.json"
@@ -72,15 +72,15 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
 
 			# The first invocation should create all the necessary routes
 			expect do
-				router.bind(manifest) do
-          set_catalog_callback &my_catalog_handler
+				router.bind(manifest) do |callback|
+          callback.catalog &my_catalog_handler
         end
 			end.to_not raise_error
 
       # Second invocation will complain that the routes already exist
 			expect do
-				router.bind(manifest) do
-          set_catalog_callback &my_catalog_handler
+				router.bind(manifest) do |callback|
+          callback.catalog &my_catalog_handler
         end
 			end.to raise_error Radix::Tree::DuplicateError
 		end
