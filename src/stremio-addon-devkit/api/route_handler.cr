@@ -58,24 +58,6 @@ module Stremio::Addon::DevKit::Api
       response.close if close
     end
 
-    #
-    # Some older stremio clients (ie: Android TV) incorrectly encode
-    # path, so they're incompatible with https://datatracker.ietf.org/doc/html/rfc3986#section-2.3
-    # Specifically, "_,.,- and ~" are encoded by these clients.
-    # This function will encode strings in a way that's compatible with these
-    # non-conformant clients
-    #
-    # ie: "foo-bar" === "foo%2Dbar"
-    def self.encode_stremio(path : String) : String
-      String.build do |io|
-        URI.encode(path, io, space_to_plus: false) do |byte|
-          # a butchered URI.unreserved?
-          char = byte.unsafe_chr
-          char.ascii_alphanumeric? || char.in?('/', ':')
-        end
-      end
-    end
-
     # Adds a given route to routing tree.
     # Should not be needed to call directly, use the macros below
     def add_route(method : String, path : String, &handler : HTTP::Server::Context -> _)
