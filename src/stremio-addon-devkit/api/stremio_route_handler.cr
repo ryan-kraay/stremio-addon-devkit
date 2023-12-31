@@ -20,7 +20,7 @@ module Stremio::Addon::DevKit::Api
         URI.encode(path, io, space_to_plus: false) do |byte|
           # a butchered version URI.unreserved?
           char = byte.unsafe_chr
-          char.ascii_alphanumeric? || char.in?('/', ':', '.')
+          char.ascii_alphanumeric? || char.in?('/', ':', '.', '*')
         end
       end
     end
@@ -50,7 +50,15 @@ module Stremio::Addon::DevKit::Api
           unencoded.each do
             if unencoded[pos] == encoded[pos]
               # Either the path is identical or this is a placeholder
-              result << current[pos]
+              if encoded[pos].includes?('*')
+                # If a wildcard appears in our path **everything** matches
+                #  so, we'll just copy whatever is leftover from current
+                #  and break
+                result += current[pos..(current.size - 1)]
+                break
+              else
+                result << current[pos]
+              end
             else
               # This content was encoded, so we want the unencoded variant
               result << unencoded[pos]

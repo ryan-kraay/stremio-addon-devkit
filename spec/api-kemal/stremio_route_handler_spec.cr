@@ -49,6 +49,28 @@ Spectator.describe Stremio::Addon::DevKit::Api::StremioRouteHandler do
     expect(response.headers["location"]).to eq("/get-url")
   end
 
+  it "supports wildcard urls" do
+    extra = nil
+    # The observed behavior of wildcards is that
+    # **everything** after the wildcard is ignored
+    router.get "/:userdata/get-url/f*/:extra/whatever" do |env|
+      extra = env.params.url.fetch("extra", "unset")
+      env.response.print "accepted"
+    end
+
+    get "/test/get-url/foo/bar"
+
+    expect(response.body).to eq "accepted"
+    expect(extra).to eq "unset"
+
+    expect do
+      get "/test/get%2Durl/foo/bar"
+    end.to_not raise_error
+
+    expect(response.status_code).to eq(301)
+    expect(response.headers["location"]).to eq("/test/get-url/foo/bar")
+  end
+
   it "supports url parameters" do
     userdata = nil
     cgi = nil
