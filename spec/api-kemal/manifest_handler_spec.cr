@@ -49,6 +49,32 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       expect(response.status_code).to eq(200)
       expect(accessed).to eq true
     end
+
+    it "redirects url encoded content to non-url encoded content" do
+      # There appears to be a bug with Android TV versions of stremio, as catalog id's will be url encoded (with upper case characters)
+      catalog_id = "movie-4u"
+      expected_destination = "/catalog/movie/#{catalog_id}.json"
+      expected_url = "/catalog/movie/movie%2D4u.json"
+      manifest = Conf::Manifest.build(
+            id: "com.stremio.addon.example",
+            name: "DemoAddon",
+            description: "An example stremio addon",
+            version: "0.0.1") do |conf|
+              conf.catalogs << Conf::Catalog.new(
+                  type: Conf::ContentType::Movie,
+                  id: catalog_id,
+                  name: "Movies for you")
+            end
+      router.bind(manifest) do |callback|
+        callback.catalog { }
+      end
+
+      expect do
+        get expected_url
+      end.to_not raise_error Kemal::Exceptions::RouteNotFound
+      expect(response.status_code).to eq(301)
+      expect(response.headers["location"]).to eq(expected_destination)
+    end
   end
 
   describe "#bind" do

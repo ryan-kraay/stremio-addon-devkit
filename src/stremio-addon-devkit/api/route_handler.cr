@@ -10,6 +10,7 @@
 require "http/server/handler"
 require "http/server/context"
 require "radix"
+require "uri"
 require "../ext"
 
 module Stremio::Addon::DevKit::Api
@@ -42,6 +43,37 @@ module Stremio::Addon::DevKit::Api
     def initialize()
       @routes = Radix::Tree(Route).new
       @cached_routes = Hash(String, Radix::Result(Route)).new
+    end
+
+
+    #
+    # A handful of utility functions
+    #
+    def self.redirect(env : HTTP::Server::Context, url : String, status_code : Int32 = 302, *, body : String? = nil, close : Bool = true)
+      response = env.response
+
+      response.headers.add "Location", url.to_s
+      response.status_code = status_code
+      response.print(body) if body
+      response.close if close
+    end
+
+    #
+    # Some older stremio clients (ie: Android TV) incorrectly encode
+    # path, so they're incompatible with https://datatracker.ietf.org/doc/html/rfc3986#section-2.3
+    # Specifically, "_,.,- and ~" are encoded by these clients.
+    # This function will encode strings in a way that's compatible with these
+    # non-conformant clients
+    #
+    # ie: "foo-bar" === "foo%2Dbar"
+    def self.encode_stremio(path : String) : String
+      String.build do |io|
+        URI.encode(path, io, space_to_plus: false) do |byte|
+          # a butchered URI.unreserved?
+          char = byte.unsafe_chr
+          char.ascii_alphanumeric? || char.in?('/', ':')
+        end
+      end
     end
 
     # Adds a given route to routing tree.

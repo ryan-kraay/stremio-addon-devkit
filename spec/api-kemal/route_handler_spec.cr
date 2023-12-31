@@ -71,4 +71,14 @@ Spectator.describe Stremio::Addon::DevKit::Api::RouteHandler do
     expect(cgi).to eq "received"
     expect(userdata).to eq "test"
   end
+
+  describe "#encode_stremio" do
+    it "will properly encode" do
+      subject = "foo-bar"
+      expected = "foo%2Dbar"
+
+      expect(RouteHandler.encode_stremio(subject)).to eq(expected)
+    end
+
+  end
 end
