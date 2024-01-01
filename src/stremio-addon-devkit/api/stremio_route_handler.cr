@@ -44,8 +44,6 @@ module Stremio::Addon::DevKit::Api
           current = env.request.path.split('/')
           result = Array(String).new()
 
-          raise Exception.new("#{current.size} != #{encoded.size}") if current.size != encoded.size
-          # TODO assert len(unencoded) == len(encoded) == len(current)
           pos = 0
           unencoded.each do
             if unencoded[pos] == encoded[pos]
