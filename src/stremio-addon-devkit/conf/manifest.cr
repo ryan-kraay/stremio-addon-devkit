@@ -14,6 +14,14 @@ module Stremio::Addon::DevKit::Conf
     #    Stream # confirmed
     #    Subtitles
     #    Addon_catalog
+
+		# source: https://github.com/crystal-lang/crystal/issues/1329#issuecomment-192890286
+    def to_s
+			{% for member in @type.constants %}
+      	return {{member.stringify.downcase}} if self == {{member}}
+    	{% end %}
+    	value.to_s
+  	end
   end
 
   # Represents a single entry in the "resources: []" described in the manifest.json
@@ -104,6 +112,7 @@ module Stremio::Addon::DevKit::Conf
 
       {% for resource_enum, prop in properties %}
         property {{ prop[:property_name] }} = [] of {{ prop[:class] }}
+        #alias CatalogType = {{ prop[:class] }}.elem_type()
       {% end %}
 
       def resources() : Array(ManifestResource)
@@ -173,5 +182,28 @@ module Stremio::Addon::DevKit::Conf
 
   class Manifest < ManifestBase
     bind_resources(ResourceType, ContentType, [{enum: ResourceType::Catalog, as: Catalog}])
+
+    #alias CatalogType = Catalog(ContentT)
+
+    # A static function call to inline the complete construction
+    # of a manifest object.
+    #
+    # Example:
+    # ```
+    # manifest = Manifest(ContentType).build(
+    #                 id: "com.stremio.addon.example",
+    #                 name: "DemoAddon",
+    #                 description: "An example stremio addon",
+    #                 version: "0.0.1") do |conf|
+    #   conf.catalogs << Catalog.new(ContentType::Movie, "movie4u", "Movies for you")
+    # end
+    # ```
+    #
+    # TODO:  Should this be moved into the macro?  As a method on .new()?
+    def self.build(*args, **named_args, &)
+      manifest = Manifest.new(*args, **named_args)
+      yield manifest
+      return manifest
+    end
   end
 end

@@ -13,6 +13,14 @@ module Stremio::Addon::DevKit::Conf
     Channel
     # `tv`: has name, description, genre; streams for tv should be live (without duration)
     TV
+
+		# source: https://github.com/crystal-lang/crystal/issues/1329#issuecomment-192890286
+    def to_s
+			{% for member in @type.constants %}
+      	return {{member.stringify.downcase}} if self == {{member}}
+    	{% end %}
+    	value.to_s
+  	end
   end
 
   @[JSON::Serializable::Options(ignore_deserialize: true)]
