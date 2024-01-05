@@ -1,5 +1,6 @@
 require "./stremio_route_handler"
 require "./catalog_request"
+require "./catalog_response"
 require "./multi_block_handler"
 
 #require "../userdata/session"
@@ -11,15 +12,26 @@ module Stremio::Addon::DevKit::Api
   class ManifestHandler < StremioRouteHandler
 		alias Conf = Stremio::Addon::DevKit::Conf
 
-    # alias CatalogHandler = CatalogRequest(ManifestT, CatalogT), HTTP::Server::Context -> _
-    #def route_catalogs(manifest, &handler : CatalogHandler)
-    def route_catalogs(manifest, &handler : HTTP::Server::Context, CatalogRequest -> _)
+    # Assigns all manifest.catalogs objects with `&handler`.
+    # If `&handler` returns a CatalogResponse, this response will be serialized
+    # in such a way that Stremio Clients can understand it (ie: proper headers will be set)
+    # If `&handler` returns `nil`, this means that the callback will provide
+    # the response
+    def route_catalogs(manifest, &handler : HTTP::Server::Context, CatalogRequest -> CatalogResponse?)
 			resource = Conf::ResourceType::Catalog
 
       manifest.catalogs.each do |catalog|
         self.get "/#{resource}/#{catalog.type}/#{catalog.id}.json" do |env|
           addon = CatalogRequest.new(manifest, catalog).parse(env)
-          handler.call(env, addon)
+          response = handler.call(env, addon)
+          if response.is_a?(CatalogResponse)
+            # We have received a respones object, we'd like to send to the user
+            response = response.as(CatalogResponse)
+            env.response.print response.to_json
+            addon.set_response_headers env
+          end
+
+          nil
         end
       end
     end

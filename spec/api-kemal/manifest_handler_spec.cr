@@ -31,6 +31,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       accessed = false
       handler = ->( env: HTTP::Server::Context, addon: Api::CatalogRequest ) {
         accessed = true
+        nil
       }
       router.route_catalogs(manifest, &handler)
 
@@ -43,6 +44,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       accessed = false
       router.route_catalogs(manifest) do |env, addon|
         accessed = true
+        nil
       end
 
       get "/catalog/movie/movie4u.json"
@@ -66,7 +68,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
                   name: "Movies for you")
             end
       router.bind(manifest) do |callback|
-        callback.catalog { }
+        callback.catalog { nil }
       end
 
       expect do
@@ -74,6 +76,27 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       end.to_not raise_error Kemal::Exceptions::RouteNotFound
       expect(response.status_code).to eq(301)
       expect(response.headers["location"]).to eq(expected_destination)
+    end
+
+    it "converts a CatalogResponse object into a valid http response" do
+      router.route_catalogs(manifest) do |env, addon|
+        Api::CatalogResponse.build do |catalog|
+          catalog.metas << Api::CatalogResponse::Meta.new(
+              Conf::ContentType::Movie,
+              "tt0032138",
+              "The Wizard of Oz",
+              URI.parse("https://images.metahub.space/poster/medium/tt0032138/img")
+          )
+        end
+      end
+
+      get "/catalog/movie/movie4u.json"
+      expect(response.status_code).to eq(200)
+      expect(response.content_type).to eq("application/json")
+      expect(response.charset).to eq("utf-8")
+      expect(response.headers["access-control-allow-origin"]).to eq("*")
+      expect(response.body).to eq({"metas": [ { "type": "movie",
+              "name": "The Wizard of Oz", "poster": "https://images.metahub.space/poster/medium/tt0032138/img", "id": "tt0032138" } ]}.to_json)
     end
   end
 

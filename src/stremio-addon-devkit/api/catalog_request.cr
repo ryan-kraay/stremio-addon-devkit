@@ -17,6 +17,13 @@ module Stremio::Addon::DevKit::Api
       return self
     end
 
+    def set_response_headers(env)
+      env.response.content_type = "application/json; charset=utf-8"
+      # Stremio requires that CORS be set
+      env.response.headers["Access-Control-Allow-Origin"] = "*"
+      env
+    end
+
   end
 
 end

@@ -7,6 +7,7 @@ module Stremio::Addon::DevKit::Api
 
   # Represents a valid catalog.json response
   # source: https://stremio.github.io/stremio-addon-guide/step3
+  # source: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/meta.md
   #@[JSON::Serializable::Options(ignore_deserialize: true)]
   class CatalogResponse
     include JSON::Serializable
@@ -34,11 +35,13 @@ module Stremio::Addon::DevKit::Api
       # Stremio's catalog consists of grid of images, fetched from
       # the `poster` field of every item. It should be a 
       # valid URL to an image.
+      @[JSON::Field(converter: Stremio::Addon::DevKit::Api::CatalogResponse::Meta::URIConverter)]
       property poster : URI?
 
       
       # The `genre` is just a human-readable descriptive field
       # TODO: Instead of an Array(String) it should be a generic Array(Enum-of-Genres)
+      @[JSON::Field(ignore: true)]
       property genre : Array(String)
       @[JSON::FakeField(suppress_key: true)]
       def genre(json : ::JSON::Builder) : Nil
@@ -47,6 +50,18 @@ module Stremio::Addon::DevKit::Api
       end
 
       def initialize(@type : Conf::ContentType, @id : String, @name : String?, @poster : URI?, @genre = Array(String).new )
+      end
+
+      # Adds custom handling of the to/from json for URI objects
+      module URIConverter
+        def self.to_json(uri : URI, json : JSON::Builder) : Nil
+          json.string(uri.to_s)
+        end
+
+        #def self.from_json(value : JSON::PullParser) : URI
+        #  # TODO fix URI parse syntax to parse a string
+        #  URI.parse(value.string)
+        #end
       end
     end
 
