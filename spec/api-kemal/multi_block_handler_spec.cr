@@ -19,7 +19,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
 
   let(catalog_request) {
       m = manifest
-      Api::CatalogRequest.new(m, m.catalogs[0]) 
+      Api::CatalogMovieRequest.new(m, m.catalogs[0]) 
   }
   let(env) {
       request = HTTP::Request.new("GET", "/")
@@ -68,7 +68,7 @@ EOL
 
     it "is possible to replace the callback with a proc" do
       accessed = false
-      proc = ->( env: HTTP::Server::Context, addon: Api::CatalogRequest) { accessed = true }
+      proc = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) { accessed = true }
 
       s = subject
       s.catalog &proc

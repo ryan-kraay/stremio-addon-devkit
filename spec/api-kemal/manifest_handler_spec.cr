@@ -29,7 +29,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   describe "#route_catalogs" do
     it "executes a proc when accessing a catalog endpoint" do
       accessed = false
-      handler = ->( env: HTTP::Server::Context, addon: Api::CatalogRequest ) {
+      handler = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest ) {
         accessed = true
         nil
       }
@@ -103,7 +103,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   describe "#bind" do
     it "binds a manifest to a callback" do
       accessed = false
-      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogRequest) {
+      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) {
         accessed = true
       }
 
@@ -117,7 +117,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
     end
 
 		it "does not allow the same manifest to be rebounded" do
-      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogRequest) { }
+      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) { }
 
 			# The first invocation should create all the necessary routes
 			expect do

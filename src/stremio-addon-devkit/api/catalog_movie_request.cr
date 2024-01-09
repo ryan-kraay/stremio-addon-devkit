@@ -2,7 +2,7 @@ require "../conf/manifest"
 
 module Stremio::Addon::DevKit::Api
 
-  class CatalogRequest
+  class CatalogMovieRequest
 
     alias Conf = Stremio::Addon::DevKit::Conf
 
