@@ -35,7 +35,7 @@ module Stremio::Addon::DevKit::Api
       end
     end
 
-    define_handler(:catalog, CatalogMovieRequest)
+    define_handler(:catalog_movie, CatalogMovieRequest)
   end
 
 end

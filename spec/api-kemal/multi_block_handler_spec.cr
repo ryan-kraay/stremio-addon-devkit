@@ -17,7 +17,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
               name: "Movies for you")
         end }
 
-  let(catalog_request) {
+  let(catalog_movie_request) {
       m = manifest
       Api::CatalogMovieRequest.new(m, m.catalogs[0]) 
   }
@@ -45,23 +45,23 @@ EOL
     end
 
     it "will fail of callbacks are not defined" do
-      expect(subject.catalog?).to eq(false)
+      expect(subject.catalog_movie?).to eq(false)
       expect do
-        subject.catalog.call(env, catalog_request)
+        subject.catalog_movie.call(env, catalog_movie_request)
       end.to raise_error TypeCastError
     end
   end
 
-  describe "#catalog" do
+  describe "#catalog_movie" do
     it "is possible to replace the callback with a block" do
       accessed = false
       s = subject
-      s.catalog do
+      s.catalog_movie do
         accessed = true
       end
-      expect(s.catalog?).to eq(true)
+      expect(s.catalog_movie?).to eq(true)
       expect do
-        s.catalog.call(env, catalog_request)
+        s.catalog_movie.call(env, catalog_movie_request)
       end.to_not raise_error
       expect(accessed).to eq(true)
     end
@@ -71,11 +71,11 @@ EOL
       proc = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) { accessed = true }
 
       s = subject
-      s.catalog &proc
+      s.catalog_movie &proc
 
-      expect(s.catalog?).to eq(true)
+      expect(s.catalog_movie?).to eq(true)
       expect do
-        s.catalog.call(env, catalog_request)
+        s.catalog_movie.call(env, catalog_movie_request)
       end.to_not raise_error
       expect(accessed).to eq(true)
     end

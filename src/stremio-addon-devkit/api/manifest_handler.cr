@@ -40,10 +40,10 @@ module Stremio::Addon::DevKit::Api
       callbacks = MultiBlockHandler.new
       yield callbacks
 
-      if !callbacks.catalog? && !manifest.catalogs.empty?
+      if !callbacks.catalog_movie? && !manifest.catalogs.empty?
         raise ManifestBindingError.new("Manifest catalogs defined, but catalog callback was not provided")
       elsif !manifest.catalogs.empty?
-        route_catalogs(manifest, &callbacks.catalog)
+        route_catalogs(manifest, &callbacks.catalog_movie)
       end
 
     end
