@@ -9,7 +9,7 @@ module Stremio::Addon::DevKit::Api
   # source: https://stremio.github.io/stremio-addon-guide/step3
   # source: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/meta.md
   #@[JSON::Serializable::Options(ignore_deserialize: true)]
-  class CatalogResponse
+  class CatalogMovieResponse
     include JSON::Serializable
     alias Conf = Stremio::Addon::DevKit::Conf
 
@@ -35,7 +35,7 @@ module Stremio::Addon::DevKit::Api
       # Stremio's catalog consists of grid of images, fetched from
       # the `poster` field of every item. It should be a 
       # valid URL to an image.
-      @[JSON::Field(converter: Stremio::Addon::DevKit::Api::CatalogResponse::Meta::URIConverter)]
+      @[JSON::Field(converter: Stremio::Addon::DevKit::Api::CatalogMovieResponse::Meta::URIConverter)]
       property poster : URI?
 
       
@@ -71,7 +71,7 @@ module Stremio::Addon::DevKit::Api
     end
 
     def self.build(&block)
-      result = CatalogResponse.new()
+      result = CatalogMovieResponse.new()
       yield result
       result
     end

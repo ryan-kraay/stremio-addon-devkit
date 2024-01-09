@@ -78,10 +78,10 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       expect(response.headers["location"]).to eq(expected_destination)
     end
 
-    it "converts a CatalogResponse object into a valid http response" do
+    it "converts a CatalogMovieResponse object into a valid http response" do
       router.route_catalogs(manifest) do |env, addon|
-        Api::CatalogResponse.build do |catalog|
-          catalog.metas << Api::CatalogResponse::Meta.new(
+        Api::CatalogMovieResponse.build do |catalog|
+          catalog.metas << Api::CatalogMovieResponse::Meta.new(
               Conf::ContentType::Movie,
               "tt0032138",
               "The Wizard of Oz",
