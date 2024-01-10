@@ -2,7 +2,7 @@ require "../conf/manifest"
 
 module Stremio::Addon::DevKit::Api
 
-  class CatalogRequest
+  class CatalogMovieRequest
 
     alias Conf = Stremio::Addon::DevKit::Conf
 
@@ -15,6 +15,13 @@ module Stremio::Addon::DevKit::Api
     def parse(env)
       # TODO:  Extract what we need from env and include the route
       return self
+    end
+
+    def set_response_headers(env)
+      env.response.content_type = "application/json; charset=utf-8"
+      # Stremio requires that CORS be set
+      env.response.headers["Access-Control-Allow-Origin"] = "*"
+      env
     end
 
   end

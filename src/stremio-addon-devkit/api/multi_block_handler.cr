@@ -1,4 +1,4 @@
-require "./catalog_request"
+require "./catalog_movie_request"
 
 module Stremio::Addon::DevKit::Api
 
@@ -35,7 +35,7 @@ module Stremio::Addon::DevKit::Api
       end
     end
 
-    define_handler(:catalog, CatalogRequest)
+    define_handler(:catalog_movie, CatalogMovieRequest)
   end
 
 end
