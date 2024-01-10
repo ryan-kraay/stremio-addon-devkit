@@ -17,7 +17,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
               name: "Movies for you")
         end }
 
-  let(catalog_movie_request) {
+  let(movie_request) {
       m = manifest
       Api::CatalogMovieRequest.new(m, m.catalogs[0]) 
   }
@@ -47,7 +47,7 @@ EOL
     it "will fail of callbacks are not defined" do
       expect(subject.catalog_movie?).to eq(false)
       expect do
-        subject.catalog_movie.call(env, catalog_movie_request)
+        subject.catalog_movie.call(env, movie_request)
       end.to raise_error TypeCastError
     end
   end
@@ -61,7 +61,7 @@ EOL
       end
       expect(s.catalog_movie?).to eq(true)
       expect do
-        s.catalog_movie.call(env, catalog_movie_request)
+        s.catalog_movie.call(env, movie_request)
       end.to_not raise_error
       expect(accessed).to eq(true)
     end
@@ -75,7 +75,7 @@ EOL
 
       expect(s.catalog_movie?).to eq(true)
       expect do
-        s.catalog_movie.call(env, catalog_movie_request)
+        s.catalog_movie.call(env, movie_request)
       end.to_not raise_error
       expect(accessed).to eq(true)
     end
