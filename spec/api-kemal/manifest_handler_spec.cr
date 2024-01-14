@@ -48,7 +48,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       expect(accessed).to eq true
     end
 
-    it "provides a valid response", skip: "callbacks need static return type" do
+    it "provides a valid response" do
       router.bind(manifest) do |callback|
         # We'll use the default manifest callback
       end

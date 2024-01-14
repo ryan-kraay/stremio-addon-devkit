@@ -1,10 +1,8 @@
 require "./catalog_movie_request"
 require "./manifest_response"
-require "../conf/manifest"
+require "./manifest_request"
 
 module Stremio::Addon::DevKit::Api
-
-  alias ManifestRequest = Stremio::Addon::DevKit::Conf::Manifest
 
   # Crystal, by design, does not support passing multiple blocks
   # so, we fake it by creating a method, which will capture a block
