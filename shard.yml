@@ -4,7 +4,7 @@ version: 0.0.1
 authors:
   - Ryan Kraay <6840071+ryan-kraay@users.noreply.github.com>
 
-crystal: 1.9.2
+crystal: 1.11.1
 
 license: LGPL
 
