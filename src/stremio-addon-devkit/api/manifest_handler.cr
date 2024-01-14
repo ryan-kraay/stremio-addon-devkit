@@ -36,16 +36,40 @@ module Stremio::Addon::DevKit::Api
       end
     end
 
+    alias ManifestResponse = Conf::Manifest
+    def route_manifest(manifest, &handler : HTTP::Server::Context, ManifestRequest -> ManifestResponse?)
+      self.get "/manifest.json" do |env|
+        response = handler.call(env, manifest)
+        if response.is_a?(ManifestResponse)
+          response = response.as(ManifestResponse)
+          env.response.print response.to_json
+          # TODO
+          #addon.set_response_headers env
+        end
+
+        nil
+      end
+    end
+
     def bind(manifest, &block)
       callbacks = MultiBlockHandler.new
       yield callbacks
 
       if !callbacks.catalog_movie? && !manifest.catalogs.empty?
-        raise ManifestBindingError.new("Manifest catalogs defined, but catalog callback was not provided")
+        raise ManifestBindingError.new("Movie Catalogs defined, but catalog_movie callback was not provided")
       elsif !manifest.catalogs.empty?
         route_catalogs(manifest, &callbacks.catalog_movie)
       end
 
+      # we will always create a manifest
+      if !callbacks.manifest?
+        callbacks.manifest do |env, manifest|
+          puts manifest
+          manifest
+          10
+        end
+      end
+      route_manifest(manifest, &callbacks.manifest)
     end
 
   end

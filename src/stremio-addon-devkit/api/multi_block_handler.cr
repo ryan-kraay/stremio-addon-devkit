@@ -1,6 +1,9 @@
 require "./catalog_movie_request"
+require "../conf/manifest"
 
 module Stremio::Addon::DevKit::Api
+
+  alias ManifestRequest = Stremio::Addon::DevKit::Conf::Manifest
 
   # Crystal, by design, does not support passing multiple blocks
   # so, we fake it by creating a method, which will capture a block
@@ -36,6 +39,7 @@ module Stremio::Addon::DevKit::Api
     end
 
     define_handler(:catalog_movie, CatalogMovieRequest)
+    define_handler(:manifest, ManifestRequest)
   end
 
 end

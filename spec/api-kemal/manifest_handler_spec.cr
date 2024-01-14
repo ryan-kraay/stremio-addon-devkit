@@ -26,6 +26,46 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
     end
   end
 
+  describe "#route_manifest" do
+    let(manifest) { Conf::Manifest.build(
+          id: "com.stremio.addon.example",
+          name: "DemoAddon",
+          description: "An example stremio addon",
+          version: "0.0.1") do |conf|
+          end }
+    let(url) { "/manifest.json" }
+
+    it "executes a proc when accessing a manifest endpoint" do
+      accessed = false
+      handler = ->( env: HTTP::Server::Context, manifest: Api::ManifestRequest ) {
+      accessed = true
+      nil
+      }
+      router.route_manifest(manifest, &handler)
+
+      get url
+      expect(response.status_code).to eq(200)
+      expect(accessed).to eq true
+    end
+
+    it "provides a valid response", skip: "callbacks need static return type" do
+      router.bind(manifest) do |callback|
+        # We'll use the default manifest callback
+        #callback.manifest do |env, manifestz|
+        #  env.response.print manifest.to_json
+        #end
+      end
+
+      get url
+      expect(response.status_code).to eq(200)
+      expect(response.body).to eq( manifest.to_json )
+      expect(response.content_type).to eq("application/json")
+      expect(response.charset).to eq("utf-8")
+      expect(response.headers["access-control-allow-origin"]).to eq("*")
+
+    end
+  end
+
   describe "#route_catalogs" do
     it "executes a proc when accessing a catalog endpoint" do
       accessed = false
