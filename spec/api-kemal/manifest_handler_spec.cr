@@ -51,9 +51,6 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
     it "provides a valid response", skip: "callbacks need static return type" do
       router.bind(manifest) do |callback|
         # We'll use the default manifest callback
-        #callback.manifest do |env, manifestz|
-        #  env.response.print manifest.to_json
-        #end
       end
 
       get url
@@ -145,6 +142,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       accessed = false
       my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) {
         accessed = true
+        nil
       }
 
       router.bind(manifest) do |callback|
@@ -157,7 +155,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
     end
 
 		it "does not allow the same manifest to be rebounded" do
-      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) { }
+      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) { nil }
 
 			# The first invocation should create all the necessary routes
 			expect do

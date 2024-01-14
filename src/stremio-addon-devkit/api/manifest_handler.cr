@@ -64,9 +64,7 @@ module Stremio::Addon::DevKit::Api
       # we will always create a manifest
       if !callbacks.manifest?
         callbacks.manifest do |env, manifest|
-          puts manifest
           manifest
-          10
         end
       end
       route_manifest(manifest, &callbacks.manifest)

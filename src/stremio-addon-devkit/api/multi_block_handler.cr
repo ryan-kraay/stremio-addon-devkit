@@ -1,4 +1,5 @@
 require "./catalog_movie_request"
+require "./manifest_response"
 require "../conf/manifest"
 
 module Stremio::Addon::DevKit::Api
@@ -9,18 +10,16 @@ module Stremio::Addon::DevKit::Api
   # so, we fake it by creating a method, which will capture a block
   class MultiBlockHandler
 
-    macro define_handler(name, request_type)
-      @{{name.id}} : (HTTP::Server::Context, {{request_type}} -> Nil) | Nil = nil
+    macro define_handler(name, request_type, response_type)
+      @{{name.id}} : (HTTP::Server::Context, {{request_type}} -> {{response_type}}) | Nil = nil
 
       # our setter
       # By allowing the use of a block, it gives the user more flexibility
       #  regarding the parameters _they_ decide to use and the return value
-      def {{name.id}}(&handler : HTTP::Server::Context, {{request_type}} -> _)
+      def {{name.id}}(&handler : HTTP::Server::Context, {{request_type}} -> {{response_type}})
         @{{name.id}} = ->(env : HTTP::Server::Context, addon : {{request_type}}) do
-          handler.call(env, addon)
-          # Regardless of the return type of our handler, we always
-          # need to return nil, otherwise we get typecast errors
-          nil
+          # TODO: It's complicated to create &handler with an optional response_type, so we have for cast the result after it's called
+          handler.call(env, addon).as({{response_type}})
         end
         # we return self, so we can easily chain these methods together
         return self
@@ -29,7 +28,7 @@ module Stremio::Addon::DevKit::Api
       # our getter
       # Throws a TypeCastError if it was not set
       def {{name.id}}
-        @{{name.id}}.as(Proc(HTTP::Server::Context, {{request_type}}, Nil))
+        @{{name.id}}.as(Proc(HTTP::Server::Context, {{request_type}}, {{response_type}}))
       end
 
       # Our check to see if the handler is set
@@ -38,8 +37,8 @@ module Stremio::Addon::DevKit::Api
       end
     end
 
-    define_handler(:catalog_movie, CatalogMovieRequest)
-    define_handler(:manifest, ManifestRequest)
+    define_handler(:catalog_movie, CatalogMovieRequest, CatalogMovieResponse?)
+    define_handler(:manifest, ManifestRequest, ManifestResponse?)
   end
 
 end
