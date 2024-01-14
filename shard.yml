@@ -4,7 +4,7 @@ version: 0.0.1
 authors:
   - Ryan Kraay <6840071+ryan-kraay@users.noreply.github.com>
 
-crystal: 1.9.2
+crystal: 1.11.1
 
 license: LGPL
 
@@ -18,7 +18,7 @@ dependencies:
     branch: main
   lz4:
     github: naqvis/lz4.cr
-    version: ~> 0.1.4
+    version: ~> 1.0.0
   radix:
     github: luislavena/radix
     version: ~> 0.4.1
@@ -26,7 +26,7 @@ dependencies:
 development_dependencies:
   spectator:
     gitlab: arctic-fox/spectator
-    version: ~> 0.11.6
+    version: ~> 0.11.7
 #  pool:
 #    github: ysbaddaden/pool
 #    version: ~> 0.3.0
@@ -41,5 +41,4 @@ development_dependencies:
     version: ~> 1.4.0
   spec-kemal:
     github: kemalcr/spec-kemal
-    branch: master
-    #    version: == 1.0.0
+    version: ~> 1.0.0
