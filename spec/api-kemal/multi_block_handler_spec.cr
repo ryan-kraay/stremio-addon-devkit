@@ -58,6 +58,7 @@ EOL
       s = subject
       s.catalog_movie do
         accessed = true
+        nil
       end
       expect(s.catalog_movie?).to eq(true)
       expect do
@@ -68,7 +69,7 @@ EOL
 
     it "is possible to replace the callback with a proc" do
       accessed = false
-      proc = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) { accessed = true }
+      proc = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) { accessed = true; nil }
 
       s = subject
       s.catalog_movie &proc

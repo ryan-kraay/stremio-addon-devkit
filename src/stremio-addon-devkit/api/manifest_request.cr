@@ -2,12 +2,7 @@ require "./stremio_base_request"
 
 module Stremio::Addon::DevKit::Api
 
-  class CatalogMovieRequest < StremioBaseRequest
-
-    getter catalog : Conf::Catalog
-
-    def initialize(@manifest : Conf::Manifest, @catalog : Conf::Catalog)
-    end
+  class ManifestRequest < StremioBaseRequest
 
     def parse(env)
       # TODO:  Extract what we need from env and include the route
@@ -17,3 +12,4 @@ module Stremio::Addon::DevKit::Api
   end
 
 end
+
