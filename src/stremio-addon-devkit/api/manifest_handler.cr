@@ -7,14 +7,13 @@ require "./manifest_response"
 
 require "./multi_block_handler"
 
-#require "../userdata/session"
+# require "../userdata/session"
 
 module Stremio::Addon::DevKit::Api
-
   class ManifestBindingError < Exception; end
 
   class ManifestHandler < StremioRouteHandler
-		alias Conf = Stremio::Addon::DevKit::Conf
+    alias Conf = Stremio::Addon::DevKit::Conf
 
     # Assigns all manifest.catalogs objects with `&handler`.
     # If `&handler` returns a CatalogMovieResponse, this response will be serialized
@@ -22,7 +21,7 @@ module Stremio::Addon::DevKit::Api
     # If `&handler` returns `nil`, this means that the callback will provide
     # the response
     def route_catalogs(manifest, &handler : HTTP::Server::Context, CatalogMovieRequest -> CatalogMovieResponse?)
-			resource = Conf::ResourceType::Catalog
+      resource = Conf::ResourceType::Catalog
 
       manifest.catalogs.each do |catalog|
         self.get "/#{resource}/#{catalog.type}/#{catalog.id}.json" do |env|
@@ -72,7 +71,5 @@ module Stremio::Addon::DevKit::Api
       end
       route_manifest(manifest, &callbacks.manifest)
     end
-
   end
-
 end

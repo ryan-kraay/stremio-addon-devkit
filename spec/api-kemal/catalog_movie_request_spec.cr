@@ -6,13 +6,12 @@ Spectator.describe Stremio::Addon::DevKit::Api::CatalogMovieRequest do
   alias Conf = Stremio::Addon::DevKit::Conf
 
   let(manifest) { Conf::Manifest.build(
-                       id: "com.stremio.addon.example",
-                       name: "DemoAddon",
-                       description: "An example stremio addon",
-                       version: "0.0.1") do |conf|
-                    conf.catalogs << Conf::Catalog.new(Conf::ContentType::Movie, "movie4u", "Movies for you")
-                  end }
-  
+    id: "com.stremio.addon.example",
+    name: "DemoAddon",
+    description: "An example stremio addon",
+    version: "0.0.1") do |conf|
+    conf.catalogs << Conf::Catalog.new(Conf::ContentType::Movie, "movie4u", "Movies for you")
+  end }
 
   it "can be constructed" do
     expect do

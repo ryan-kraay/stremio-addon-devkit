@@ -6,7 +6,6 @@ get "/" do
 end
 
 Kemal.run
-  
 
 Spectator.describe Stremio::Addon::DevKit::Api::RouteHandler do
   alias RouteHandler = Stremio::Addon::DevKit::Api::RouteHandler
@@ -26,7 +25,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::RouteHandler do
   end
 
   it "renders locally defined routes" do
-    #Kemal::RouteHandler::INSTANCE.add_route "GET", "/local" do
+    # Kemal::RouteHandler::INSTANCE.add_route "GET", "/local" do
     router.add_route "GET", "/local" do |env|
       env.response.print "Foobar"
     end
@@ -71,5 +70,4 @@ Spectator.describe Stremio::Addon::DevKit::Api::RouteHandler do
     expect(cgi).to eq "received"
     expect(userdata).to eq "test"
   end
-
 end

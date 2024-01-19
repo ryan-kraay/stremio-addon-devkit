@@ -4,7 +4,6 @@ require "./catalog"
 require "./resource_type"
 
 module Stremio::Addon::DevKit::Conf
-
   # Represents a single entry in the "resources: []" described in the manifest.json
   #
   # There is a more condensed form of this (ie: `resources: ["catalog"]`).  However, we also use this more
@@ -164,7 +163,7 @@ module Stremio::Addon::DevKit::Conf
   class Manifest < ManifestBase
     bind_resources(ResourceType, ContentType, [{enum: ResourceType::Catalog, as: Catalog}])
 
-    #alias CatalogType = Catalog(ContentT)
+    # alias CatalogType = Catalog(ContentT)
 
     # A static function call to inline the complete construction
     # of a manifest object.
@@ -172,10 +171,10 @@ module Stremio::Addon::DevKit::Conf
     # Example:
     # ```
     # manifest = Manifest(ContentType).build(
-    #                 id: "com.stremio.addon.example",
-    #                 name: "DemoAddon",
-    #                 description: "An example stremio addon",
-    #                 version: "0.0.1") do |conf|
+    #   id: "com.stremio.addon.example",
+    #   name: "DemoAddon",
+    #   description: "An example stremio addon",
+    #   version: "0.0.1") do |conf|
     #   conf.catalogs << Catalog.new(ContentType::Movie, "movie4u", "Movies for you")
     # end
     # ```

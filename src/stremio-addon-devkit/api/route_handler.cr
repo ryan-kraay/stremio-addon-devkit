@@ -14,7 +14,6 @@ require "uri"
 require "../ext"
 
 module Stremio::Addon::DevKit::Api
-
   struct Route
     getter method, path, handler
     @handler : HTTP::Server::Context -> String
@@ -29,7 +28,7 @@ module Stremio::Addon::DevKit::Api
 
   # Inspired by Kemal::RouteHandler, this Handler is not
   # a singleton nor will it return a http-404 if a match is not made
-  # 
+  #
   # It provides a Kemal::RouteHandler-like interface, but respects Kemals
   # request that libraries use `add_handler` to inject routes, rather
   # than adding them to the global Kemal::RouteHandler.
@@ -38,13 +37,12 @@ module Stremio::Addon::DevKit::Api
 
     @cached_routes : Hash(String, Radix::Result(Route))
     CACHED_ROUTES_LIMIT = 64
-    HTTP_METHODS   = %w(get post put patch delete options)
+    HTTP_METHODS        = %w(get post put patch delete options)
 
-    def initialize()
+    def initialize
       @routes = Radix::Tree(Route).new
       @cached_routes = Hash(String, Radix::Result(Route)).new
     end
-
 
     #
     # A handful of utility functions
@@ -126,7 +124,5 @@ module Stremio::Addon::DevKit::Api
     rescue
       value
     end
-
   end
-
 end

@@ -1,4 +1,3 @@
-
 module Stremio::Addon::DevKit::Conf
   # These are the possible content types supported by Stremio
   #  See: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/content.types.md
@@ -12,12 +11,12 @@ module Stremio::Addon::DevKit::Conf
     # `tv`: has name, description, genre; streams for tv should be live (without duration)
     TV
 
-		# source: https://github.com/crystal-lang/crystal/issues/1329#issuecomment-192890286
+    # source: https://github.com/crystal-lang/crystal/issues/1329#issuecomment-192890286
     def to_s
-			{% for member in @type.constants %}
+      {% for member in @type.constants %}
       	return {{member.stringify.downcase}} if self == {{member}}
     	{% end %}
-    	value.to_s
-  	end
+      value.to_s
+    end
   end
 end

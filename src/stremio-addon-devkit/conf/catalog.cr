@@ -3,7 +3,6 @@ require "json"
 require "json-serializable-fake"
 
 module Stremio::Addon::DevKit::Conf
-
   @[JSON::Serializable::Options(ignore_deserialize: true)]
   class Catalog
     include JSON::Serializable
