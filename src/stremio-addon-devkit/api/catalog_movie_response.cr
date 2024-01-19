@@ -4,11 +4,10 @@ require "uri"
 require "../conf/content_type"
 
 module Stremio::Addon::DevKit::Api
-
   # Represents a valid catalog.json response
   # source: https://stremio.github.io/stremio-addon-guide/step3
   # source: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/meta.md
-  #@[JSON::Serializable::Options(ignore_deserialize: true)]
+  # @[JSON::Serializable::Options(ignore_deserialize: true)]
   class CatalogMovieResponse
     include JSON::Serializable
     alias Conf = Stremio::Addon::DevKit::Conf
@@ -23,7 +22,7 @@ module Stremio::Addon::DevKit::Api
       # You can use any unique string for the `id`.
       # In this case we use the corresponding IMDB ID.
       # Stremio features an system add-on called Cinemeta.
-      # This add-on provides detailed metadata for any movie or 
+      # This add-on provides detailed metadata for any movie or
       # TV show that matches a valid IMDB ID.
       #
       # NOTE: All IMDB ID's begin with 'tt' (ie: tt0032138)
@@ -33,12 +32,11 @@ module Stremio::Addon::DevKit::Api
       property name : String?
 
       # Stremio's catalog consists of grid of images, fetched from
-      # the `poster` field of every item. It should be a 
+      # the `poster` field of every item. It should be a
       # valid URL to an image.
       @[JSON::Field(converter: Stremio::Addon::DevKit::Api::CatalogMovieResponse::Meta::URIConverter)]
       property poster : URI?
 
-      
       # The `genre` is just a human-readable descriptive field
       # TODO: Instead of an Array(String) it should be a generic Array(Enum-of-Genres)
       @[JSON::Field(ignore: true)]
@@ -49,7 +47,7 @@ module Stremio::Addon::DevKit::Api
         genre.to_json json unless genre.empty?
       end
 
-      def initialize(@type : Conf::ContentType, @id : String, @name : String?, @poster : URI?, @genre = Array(String).new )
+      def initialize(@type : Conf::ContentType, @id : String, @name : String?, @poster : URI?, @genre = Array(String).new)
       end
 
       # Adds custom handling of the to/from json for URI objects
@@ -58,10 +56,10 @@ module Stremio::Addon::DevKit::Api
           json.string(uri.to_s)
         end
 
-        #def self.from_json(value : JSON::PullParser) : URI
+        # def self.from_json(value : JSON::PullParser) : URI
         #  # TODO fix URI parse syntax to parse a string
         #  URI.parse(value.string)
-        #end
+        # end
       end
     end
 
@@ -71,10 +69,9 @@ module Stremio::Addon::DevKit::Api
     end
 
     def self.build(&block)
-      result = CatalogMovieResponse.new()
+      result = CatalogMovieResponse.new
       yield result
       result
     end
   end
-
 end

@@ -3,11 +3,9 @@ require "./manifest_response"
 require "./manifest_request"
 
 module Stremio::Addon::DevKit::Api
-
   # Crystal, by design, does not support passing multiple blocks
   # so, we fake it by creating a method, which will capture a block
   class MultiBlockHandler
-
     macro define_handler(name, request_type, response_type)
       @{{name.id}} : (HTTP::Server::Context, {{request_type}} -> {{response_type}}) | Nil = nil
 
@@ -38,5 +36,4 @@ module Stremio::Addon::DevKit::Api
     define_handler(:catalog_movie, CatalogMovieRequest, CatalogMovieResponse?)
     define_handler(:manifest, ManifestRequest, ManifestResponse?)
   end
-
 end

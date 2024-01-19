@@ -9,15 +9,15 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   alias Conf = Stremio::Addon::DevKit::Conf
 
   let(manifest) { Conf::Manifest.build(
-        id: "com.stremio.addon.example",
-        name: "DemoAddon",
-        description: "An example stremio addon",
-        version: "0.0.1") do |conf|
-          conf.catalogs << Conf::Catalog.new(
-              type: Conf::ContentType::Movie,
-              id: "movie4u",
-              name: "Movies for you")
-        end }
+    id: "com.stremio.addon.example",
+    name: "DemoAddon",
+    description: "An example stremio addon",
+    version: "0.0.1") do |conf|
+    conf.catalogs << Conf::Catalog.new(
+      type: Conf::ContentType::Movie,
+      id: "movie4u",
+      name: "Movies for you")
+  end }
 
   let(router) { Api::ManifestHandler.new }
   before_each do
@@ -28,18 +28,18 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
 
   describe "#route_manifest" do
     let(manifest) { Conf::Manifest.build(
-          id: "com.stremio.addon.example",
-          name: "DemoAddon",
-          description: "An example stremio addon",
-          version: "0.0.1") do |conf|
-          end }
+      id: "com.stremio.addon.example",
+      name: "DemoAddon",
+      description: "An example stremio addon",
+      version: "0.0.1") do |conf|
+    end }
     let(url) { "/manifest.json" }
 
     it "executes a proc when accessing a manifest endpoint" do
       accessed = false
-      handler = ->( env: HTTP::Server::Context, manifest: Api::ManifestRequest ) {
-      accessed = true
-      nil
+      handler = ->(env : HTTP::Server::Context, manifest : Api::ManifestRequest) {
+        accessed = true
+        nil
       }
       router.route_manifest(manifest, &handler)
 
@@ -55,18 +55,17 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
 
       get url
       expect(response.status_code).to eq(200)
-      expect(response.body).to eq( manifest.to_json )
+      expect(response.body).to eq(manifest.to_json)
       expect(response.content_type).to eq("application/json")
       expect(response.charset).to eq("utf-8")
       expect(response.headers["access-control-allow-origin"]).to eq("*")
-
     end
   end
 
   describe "#route_catalogs" do
     it "executes a proc when accessing a catalog endpoint" do
       accessed = false
-      handler = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest ) {
+      handler = ->(env : HTTP::Server::Context, addon : Api::CatalogMovieRequest) {
         accessed = true
         nil
       }
@@ -95,15 +94,15 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       expected_destination = "/catalog/movie/#{catalog_id}.json"
       expected_url = "/catalog/movie/movie%2D4u.json"
       manifest = Conf::Manifest.build(
-            id: "com.stremio.addon.example",
-            name: "DemoAddon",
-            description: "An example stremio addon",
-            version: "0.0.1") do |conf|
-              conf.catalogs << Conf::Catalog.new(
-                  type: Conf::ContentType::Movie,
-                  id: catalog_id,
-                  name: "Movies for you")
-            end
+        id: "com.stremio.addon.example",
+        name: "DemoAddon",
+        description: "An example stremio addon",
+        version: "0.0.1") do |conf|
+        conf.catalogs << Conf::Catalog.new(
+          type: Conf::ContentType::Movie,
+          id: catalog_id,
+          name: "Movies for you")
+      end
       router.bind(manifest) do |callback|
         callback.catalog_movie { nil }
       end
@@ -119,10 +118,10 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       router.route_catalogs(manifest) do |env, addon|
         Api::CatalogMovieResponse.build do |catalog|
           catalog.metas << Api::CatalogMovieResponse::Meta.new(
-              Conf::ContentType::Movie,
-              "tt0032138",
-              "The Wizard of Oz",
-              URI.parse("https://images.metahub.space/poster/medium/tt0032138/img")
+            Conf::ContentType::Movie,
+            "tt0032138",
+            "The Wizard of Oz",
+            URI.parse("https://images.metahub.space/poster/medium/tt0032138/img")
           )
         end
       end
@@ -132,15 +131,15 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       expect(response.content_type).to eq("application/json")
       expect(response.charset).to eq("utf-8")
       expect(response.headers["access-control-allow-origin"]).to eq("*")
-      expect(response.body).to eq({"metas": [ { "type": "movie",
-              "name": "The Wizard of Oz", "poster": "https://images.metahub.space/poster/medium/tt0032138/img", "id": "tt0032138" } ]}.to_json)
+      expect(response.body).to eq({"metas": [{"type": "movie",
+                                              "name": "The Wizard of Oz", "poster": "https://images.metahub.space/poster/medium/tt0032138/img", "id": "tt0032138"}]}.to_json)
     end
   end
 
   describe "#bind" do
     it "binds a manifest to a callback" do
       accessed = false
-      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) {
+      my_catalog_handler = ->(env : HTTP::Server::Context, addon : Api::CatalogMovieRequest) {
         accessed = true
         nil
       }
@@ -154,40 +153,39 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       expect(accessed).to eq true
     end
 
-		it "does not allow the same manifest to be rebounded" do
-      my_catalog_handler = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) { nil }
+    it "does not allow the same manifest to be rebounded" do
+      my_catalog_handler = ->(env : HTTP::Server::Context, addon : Api::CatalogMovieRequest) { nil }
 
-			# The first invocation should create all the necessary routes
-			expect do
-				router.bind(manifest) do |callback|
+      # The first invocation should create all the necessary routes
+      expect do
+        router.bind(manifest) do |callback|
           callback.catalog_movie &my_catalog_handler
         end
-			end.to_not raise_error
+      end.to_not raise_error
 
       # Second invocation will complain that the routes already exist
-			expect do
-				router.bind(manifest) do |callback|
+      expect do
+        router.bind(manifest) do |callback|
           callback.catalog_movie &my_catalog_handler
         end
-			end.to raise_error Radix::Tree::DuplicateError
-		end
+      end.to raise_error Radix::Tree::DuplicateError
+    end
 
-		it "raises an exception when a catalog is provided, but no callback is assigned" do
-			expect do
-				router.bind(manifest) { }
-			end.to raise_error Api::ManifestBindingError
-		end
+    it "raises an exception when a catalog is provided, but no callback is assigned" do
+      expect do
+        router.bind(manifest) { }
+      end.to raise_error Api::ManifestBindingError
+    end
 
-		it "expects callbacks if catalog resources exist" do
-  		empty_manifest = Conf::Manifest.new(
+    it "expects callbacks if catalog resources exist" do
+      empty_manifest = Conf::Manifest.new(
         id: "com.stremio.addon.example-2",
         name: "DemoAddon",
         description: "An example stremio addon",
         version: "0.0.1")
-			expect do
-				router.bind(empty_manifest) { }
-			end.to_not raise_error
-			
-		end
+      expect do
+        router.bind(empty_manifest) { }
+      end.to_not raise_error
+    end
   end
 end

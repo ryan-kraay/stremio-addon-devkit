@@ -1,9 +1,6 @@
 require "./route_handler"
 
-
 module Stremio::Addon::DevKit::Api
-
-  
   #
   # Some older stremio clients (ie: Android TV) incorrectly encode
   # paths, so they're incompatible with https://datatracker.ietf.org/doc/html/rfc3986#section-2.3
@@ -12,7 +9,6 @@ module Stremio::Addon::DevKit::Api
   # non-conforming clients
   #
   class StremioRouteHandler < RouteHandler
-
     # Encodes a string such that older stremio clients can access the urls
     # ie: "foo-bar" === "foo%2Dbar"
     def self.encode(path : String) : String
@@ -42,7 +38,7 @@ module Stremio::Addon::DevKit::Api
           unencoded = path.split('/')
           encoded = encoded_path.split('/')
           current = env.request.path.split('/')
-          result = Array(String).new()
+          result = Array(String).new
 
           pos = 0
           unencoded.each do
@@ -75,6 +71,5 @@ module Stremio::Addon::DevKit::Api
         # URI.encode_path(catalog.id) == catalog.id
       end
     end
-    
   end
 end

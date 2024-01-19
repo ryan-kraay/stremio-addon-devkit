@@ -10,7 +10,7 @@ class HTTP::Server
   class Context
     {% unless @type.has_method?(:params) %}
       def params
-        @params ||= Hash(String, String).new()
+        @params ||= Hash(String, String).new
       end
     {% end %}
   end

@@ -1,29 +1,28 @@
 require "../../src/stremio-addon-devkit/api/multi_block_handler"
 require "./spec_helper"
 
-
 Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
-	alias Api = Stremio::Addon::DevKit::Api
+  alias Api = Stremio::Addon::DevKit::Api
   alias Conf = Stremio::Addon::DevKit::Conf
 
   let(manifest) { Conf::Manifest.build(
-        id: "com.stremio.addon.example",
-        name: "DemoAddon",
-        description: "An example stremio addon",
-        version: "0.0.1") do |conf|
-          conf.catalogs << Conf::Catalog.new(
-              type: Conf::ContentType::Movie,
-              id: "movie4u",
-              name: "Movies for you")
-        end }
+    id: "com.stremio.addon.example",
+    name: "DemoAddon",
+    description: "An example stremio addon",
+    version: "0.0.1") do |conf|
+    conf.catalogs << Conf::Catalog.new(
+      type: Conf::ContentType::Movie,
+      id: "movie4u",
+      name: "Movies for you")
+  end }
 
   let(movie_request) {
-      m = manifest
-      Api::CatalogMovieRequest.new(m, m.catalogs[0]) 
+    m = manifest
+    Api::CatalogMovieRequest.new(m, m.catalogs[0])
   }
   let(env) {
-      request = HTTP::Request.new("GET", "/")
-      response_text = IO::Memory.new(<<-EOL)
+    request = HTTP::Request.new("GET", "/")
+    response_text = IO::Memory.new(<<-EOL)
 HTTP/1.1 200 OK
 Date: Mon, 27 Jul 2009 12:28:53 GMT
 Server: Apache/2.2.14 (Win32)
@@ -32,8 +31,8 @@ Content-Length: 0
 Content-Type: text/html
 Connection: Closed
 EOL
-      response = HTTP::Server::Response.new(response_text)
-      HTTP::Server::Context.new(request, response)
+    response = HTTP::Server::Response.new(response_text)
+    HTTP::Server::Context.new(request, response)
   }
   subject { Api::MultiBlockHandler.new }
 
@@ -69,7 +68,7 @@ EOL
 
     it "is possible to replace the callback with a proc" do
       accessed = false
-      proc = ->( env: HTTP::Server::Context, addon: Api::CatalogMovieRequest) { accessed = true; nil }
+      proc = ->(env : HTTP::Server::Context, addon : Api::CatalogMovieRequest) { accessed = true; nil }
 
       s = subject
       s.catalog_movie &proc

@@ -2,7 +2,7 @@ require "../../src/stremio-addon-devkit/api/stremio_route_handler"
 require "./spec_helper"
 
 Kemal.run
-  
+
 Spectator.describe Stremio::Addon::DevKit::Api::StremioRouteHandler do
   alias StremioRouteHandler = Stremio::Addon::DevKit::Api::StremioRouteHandler
 
@@ -101,6 +101,5 @@ Spectator.describe Stremio::Addon::DevKit::Api::StremioRouteHandler do
 
       expect(StremioRouteHandler.encode(subject)).to eq(expected)
     end
-
   end
 end
