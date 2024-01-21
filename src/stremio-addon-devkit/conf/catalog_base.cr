@@ -76,7 +76,7 @@ module Stremio::Addon::DevKit::Conf
       @[JSON::FakeField]
       def options(json : ::JSON::Builder) : Nil
         # normalize our genres as a simple Array of Strings
-        g : GenresResultType = genres.is_a?(GenresProcType) ? genres.as(GenresProcType).call : genres.as(GenresResultType)
+        g = genres.call
 
         raise ArgumentError.new("ExtraGenre#max_selectable cannot be 0") unless @optionsLimit > 0_u32
         raise ArgumentError.new("ExtraGenre@max_selectable cannot be larger than the number of genres(#{g.size})") if @optionsLimit > g.size
@@ -88,15 +88,18 @@ module Stremio::Addon::DevKit::Conf
       # **NOTE**:  The list of genres is only generated when creating a manfiest.  Afterwards, this list of genres cannot be changed (unless the addon is
       #  reinstalled)
       @[JSON::Field(ignore: true)]
-      getter genres : GenresResultType | GenresProcType
+      getter genres : GenresProcType
 
-      def initialize(@genres : GenresResultType | GenresProcType, @isRequired = false, max_selectable : UInt32 = 1)
+      def initialize(genres : GenresResultType, @isRequired = false, max_selectable : UInt32 = 1)
         @name = ExtraType::Genre
         @optionsLimit = max_selectable
+        @genres = -> : GenresResultType { genres }
       end
 
-      def initialize(isRequired = false, max_selectable : UInt32 = 1, &block : -> GenresResultType)
-        initialize(block, isRequired, max_selectable)
+      def initialize(@isRequired = false, max_selectable : UInt32 = 1, &block : -> GenresResultType)
+        @name = ExtraType::Genre
+        @optionsLimit = max_selectable
+        @genres = block
       end
     end
 
