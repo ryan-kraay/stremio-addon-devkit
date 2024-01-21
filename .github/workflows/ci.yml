@@ -40,4 +40,8 @@ jobs:
       - name: Install shards
         run: shards update
       - run: crystal spec --order=random --error-on-warnings
+        env:
+          KEMAL_ENV: test
       - run: crystal spec -Dpreview_mt --order=random --error-on-warnings
+        env:
+          KEMAL_ENV: test
