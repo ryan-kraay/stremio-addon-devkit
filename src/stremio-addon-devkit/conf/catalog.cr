@@ -4,18 +4,18 @@ require "json-serializable-fake"
 
 module Stremio::Addon::DevKit::Conf
   @[JSON::Serializable::Options(ignore_deserialize: true)]
-  class Catalog
+  class CatalogMovie
     include JSON::Serializable
     include JSON::Serializable::Fake
 
-    # Catalogs support an (optional) Extra field.
-    #   source: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/requests/defineCatalogHandler.md#extra-parameters
+    # CatalogMovies support an (optional) Extra field.
+    #   source: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/requests/defineCatalogMovieHandler.md#extra-parameters
     enum ExtraType
-      # `search`: The Catalog can be searched
+      # `search`: The CatalogMovie can be searched
       Search
-      # `genre`: The Catalog can be filtered by genres
+      # `genre`: The CatalogMovie can be filtered by genres
       Genre
-      # `skip`: The Catalog supports pagination
+      # `skip`: The CatalogMovie supports pagination
       Skip
     end
 
@@ -133,7 +133,7 @@ module Stremio::Addon::DevKit::Conf
       search.as(ExtraSearch).to_json(json) if search.is_a?(ExtraSearch)
     end
 
-    # Updates manifest_resource (which is of type ManifestResource) with the relevant information from this Catalog
+    # Updates manifest_resource (which is of type ManifestResource) with the relevant information from this CatalogMovie
     def insert_resource(manifest_resource) : Nil
       manifest_resource.types.add type
     end

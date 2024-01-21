@@ -60,7 +60,7 @@ module Stremio::Addon::DevKit::Conf
     # This is the glue that binds a manifest:
     #   1. To a ResourceType (ie: meta, catalog, etc)
     #   2. To a ContentType (ie: movie, series, tv, etc)
-    #   3. To an class/implementation (ie: ::Catalog(ContentType).new)
+    #   3. To an class/implementation (ie: ::CatalogMovie(ContentType).new)
     #
     # This macro does a lot of magic in an attempt to normalize some of the irregularies in
     #  the stremio manifest (ie: the use of "catalog" everywhere, except in the root of the manifest, where it's "catalogs".
@@ -92,7 +92,7 @@ module Stremio::Addon::DevKit::Conf
 
       {% for resource_enum, prop in properties %}
         property {{ prop[:property_name] }} = [] of {{ prop[:class] }}
-        #alias CatalogType = {{ prop[:class] }}.elem_type()
+        #alias CatalogMovieType = {{ prop[:class] }}.elem_type()
       {% end %}
 
       def resources() : Array(ManifestResource)
@@ -145,7 +145,7 @@ module Stremio::Addon::DevKit::Conf
     # end
 
     # @[JSON::FakeField]
-    # def addonCatalogs(json : ::JSON::Builder) : Nil
+    # def addonCatalogMovies(json : ::JSON::Builder) : Nil
     #  # TODO:  See https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md#addon-catalogs
     # end
 
@@ -161,9 +161,9 @@ module Stremio::Addon::DevKit::Conf
   end
 
   class Manifest < ManifestBase
-    bind_resources(ResourceType, ContentType, [{enum: ResourceType::Catalog, as: Catalog}])
+    bind_resources(ResourceType, ContentType, [{enum: ResourceType::Catalog, as: CatalogMovie, property_name: :catalog_movies}])
 
-    # alias CatalogType = Catalog(ContentT)
+    # alias CatalogMovieType = CatalogMovie(ContentT)
 
     # A static function call to inline the complete construction
     # of a manifest object.
@@ -175,7 +175,7 @@ module Stremio::Addon::DevKit::Conf
     #   name: "DemoAddon",
     #   description: "An example stremio addon",
     #   version: "0.0.1") do |conf|
-    #   conf.catalogs << Catalog.new(ContentType::Movie, "movie4u", "Movies for you")
+    #   conf.catalogs << CatalogMovie.new(ContentType::Movie, "movie4u", "Movies for you")
     # end
     # ```
     #

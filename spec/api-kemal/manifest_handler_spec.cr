@@ -13,7 +13,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
     name: "DemoAddon",
     description: "An example stremio addon",
     version: "0.0.1") do |conf|
-    conf.catalogs << Conf::Catalog.new(
+    conf.catalogs << Conf::CatalogMovie.new(
       type: Conf::ContentType::Movie,
       id: "movie4u",
       name: "Movies for you")
@@ -98,7 +98,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
         name: "DemoAddon",
         description: "An example stremio addon",
         version: "0.0.1") do |conf|
-        conf.catalogs << Conf::Catalog.new(
+        conf.catalogs << Conf::CatalogMovie.new(
           type: Conf::ContentType::Movie,
           id: catalog_id,
           name: "Movies for you")

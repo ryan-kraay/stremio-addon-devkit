@@ -1,8 +1,8 @@
 require "./spec_helper"
 require "../../src/stremio-addon-devkit/conf/catalog"
 
-Spectator.describe Stremio::Addon::DevKit::Conf::Catalog do
-  alias Catalog = Stremio::Addon::DevKit::Conf::Catalog
+Spectator.describe Stremio::Addon::DevKit::Conf::CatalogMovie do
+  alias CatalogMovie = Stremio::Addon::DevKit::Conf::CatalogMovie
   alias ContentType = Stremio::Addon::DevKit::Conf::ContentType
 
   let(id) { "hello" }
@@ -10,7 +10,7 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Catalog do
   let(content_type) { ContentType::Movie }
 
   describe "ExtraSearch" do
-    subject { Catalog::ExtraSearch.new }
+    subject { CatalogMovie::ExtraSearch.new }
 
     it "can initialize" do
       expect do
@@ -20,8 +20,8 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Catalog do
 
     it "can initialize with isRequired" do
       is_required = true
-      search = Catalog::ExtraSearch.new(is_required)
-      expect(search.name).to eq(Catalog::ExtraType::Search)
+      search = CatalogMovie::ExtraSearch.new(is_required)
+      expect(search.name).to eq(CatalogMovie::ExtraType::Search)
       expect(search.isRequired).to eq(is_required)
     end
 
@@ -31,7 +31,7 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Catalog do
   end
 
   describe "ExtraSkip" do
-    subject { Catalog::ExtraSkip.new }
+    subject { CatalogMovie::ExtraSkip.new }
 
     describe "#initialize" do
       it "can initialize" do
@@ -41,7 +41,7 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Catalog do
       end
 
       it "has sensible defaults" do
-        expect(subject.name).to eq(Catalog::ExtraType::Skip)
+        expect(subject.name).to eq(CatalogMovie::ExtraType::Skip)
         expect(subject.isRequired).to be_false
         expect(subject.options).to be_nil
       end
@@ -49,14 +49,14 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Catalog do
       it "allows integer steps" do
         steps = [100_u32, 500_u32, 700_u32]
         string_steps = steps.map { |step| step.to_s }
-        skip = Catalog::ExtraSkip.new(steps: steps)
+        skip = CatalogMovie::ExtraSkip.new(steps: steps)
         expect(skip.options).to contain_exactly(*string_steps).in_order
       end
 
       it "allows custom steps" do
         # I have no idea why/how this is useful, but the sdk supports it
         steps = ["breakfast", "lunch", "dinner", "sleep"]
-        skip = Catalog::ExtraSkip.new(steps: steps)
+        skip = CatalogMovie::ExtraSkip.new(steps: steps)
         expect(skip.options).to contain_exactly(*steps).in_order
       end
     end
@@ -70,49 +70,49 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Catalog do
     let(genres) { ["Action", "Comedy", "Sci-Fi"] }
     describe "#initialize" do
       it "accepts a list of genres" do
-        result = Catalog::ExtraGenre.new genres
+        result = CatalogMovie::ExtraGenre.new genres
         expect(result.to_json).to eq({"name": "genre", "isRequired": false, "optionsLimit": 1, "options": genres}.to_json)
       end
       it "accepts a block" do
-        result = Catalog::ExtraGenre.new do
+        result = CatalogMovie::ExtraGenre.new do
           genres
         end
         expect(result.to_json).to eq({"name": "genre", "isRequired": false, "optionsLimit": 1, "options": genres}.to_json)
       end
       it "allows multiple genre's to be chosen" do
         max_selectable_genres = 2_u32
-        result = Catalog::ExtraGenre.new genres, max_selectable: max_selectable_genres
+        result = CatalogMovie::ExtraGenre.new genres, max_selectable: max_selectable_genres
         expect(result.to_json).to eq({"name": "genre", "isRequired": false, "optionsLimit": max_selectable_genres, "options": genres}.to_json)
       end
     end
     describe "#to_json" do
       it "cannot have zero max_selectable_genres" do
         expect do
-          Catalog::ExtraGenre.new(genres, max_selectable: 0).to_json
+          CatalogMovie::ExtraGenre.new(genres, max_selectable: 0).to_json
         end.to raise_error(ArgumentError)
       end
 
       it "cannot have more selectable_genres than genres" do
         expect do
-          Catalog::ExtraGenre.new(genres, max_selectable: (genres.size + 1).to_u32).to_json
+          CatalogMovie::ExtraGenre.new(genres, max_selectable: (genres.size + 1).to_u32).to_json
         end.to raise_error(ArgumentError)
       end
 
       it "cannot have empty genres" do
         expect do
-          Catalog::ExtraGenre.new(Array(String).new).to_json
+          CatalogMovie::ExtraGenre.new(Array(String).new).to_json
         end.to raise_error(ArgumentError)
       end
 
       it "allows max_selectable to include all our genres" do
         expect do
-          Catalog::ExtraGenre.new(genres, max_selectable: genres.size.to_u32).to_json
+          CatalogMovie::ExtraGenre.new(genres, max_selectable: genres.size.to_u32).to_json
         end.to_not raise_error
       end
 
       it "executes &block only when #to_json is called" do
         called = 0
-        result = Catalog::ExtraGenre.new do
+        result = CatalogMovie::ExtraGenre.new do
           called += 1
           genres
         end
@@ -135,12 +135,12 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Catalog do
 
   describe "#class" do
     let(genres) { ["Action", "Comedy", "Sci-Fi"] }
-    let(skip) { Catalog::ExtraSkip.new }
-    let(search) { Catalog::ExtraSearch.new }
-    let(genre) { Catalog::ExtraGenre.new genres }
+    let(skip) { CatalogMovie::ExtraSkip.new }
+    let(search) { CatalogMovie::ExtraSearch.new }
+    let(genre) { CatalogMovie::ExtraGenre.new genres }
 
-    subject(catalog_extra) { Catalog.new(content_type, id, name, skip, genre, search) }
-    subject(catalog) { Catalog.new(content_type, id, name) }
+    subject(catalog_extra) { CatalogMovie.new(content_type, id, name, skip, genre, search) }
+    subject(catalog) { CatalogMovie.new(content_type, id, name) }
     describe "#initialize" do
       it "can initialize" do
         expect do
