@@ -38,7 +38,7 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
       # Suitable for inline constructing within unit tests
       subject = Manifest.build(id, name, description, version) do |conf|
         ran_callback = true
-        conf.catalog_movies << CatalogMovie.new(ContentType::Movie, expected_catalog_id, "Movies for you")
+        conf.catalog_movies << CatalogMovie.new(expected_catalog_id, "Movies for you")
       end
 
       expect(ran_callback).to eq(true)
@@ -49,7 +49,7 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
 
   describe "#to_json" do
     let(catalog_type) { ContentType::Movie }
-    let(catalog) { CatalogMovie.new(catalog_type, "movie4u", "Movies for you") }
+    let(catalog) { CatalogMovie.new("movie4u", "Movies for you") }
     subject { Manifest.new(id, name, description, version) }
 
     it "generates json" do

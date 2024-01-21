@@ -11,7 +11,6 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
     description: "An example stremio addon",
     version: "0.0.1") do |conf|
     conf << Conf::CatalogMovie.new(
-      type: Conf::ContentType::Movie,
       id: "movie4u",
       name: "Movies for you")
   end }

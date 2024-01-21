@@ -139,8 +139,8 @@ Spectator.describe Stremio::Addon::DevKit::Conf::CatalogMovie do
     let(search) { CatalogMovie::ExtraSearch.new }
     let(genre) { CatalogMovie::ExtraGenre.new genres }
 
-    subject(catalog_extra) { CatalogMovie.new(content_type, id, name, skip, genre, search) }
-    subject(catalog) { CatalogMovie.new(content_type, id, name) }
+    subject(catalog_extra) { CatalogMovie.new(id, name, skip, genre, search) }
+    subject(catalog) { CatalogMovie.new(id, name) }
     describe "#initialize" do
       it "can initialize" do
         expect do
