@@ -10,12 +10,12 @@ Spectator.describe Stremio::Addon::DevKit::Api::CatalogMovieRequest do
     name: "DemoAddon",
     description: "An example stremio addon",
     version: "0.0.1") do |conf|
-    conf.catalogs << Conf::CatalogMovie.new(Conf::ContentType::Movie, "movie4u", "Movies for you")
+    conf << Conf::CatalogMovie.new(Conf::ContentType::Movie, "movie4u", "Movies for you")
   end }
 
   it "can be constructed" do
     expect do
-      CatalogMovieRequest.new(manifest, manifest.catalogs[0])
+      CatalogMovieRequest.new(manifest, manifest.catalog_movies[0])
     end.to_not raise_error
   end
 end

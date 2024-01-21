@@ -43,7 +43,7 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
 
       expect(ran_callback).to eq(true)
       expect(subject.name).to eq(name)
-      expect(subject.catalogs[0].id).to eq(expected_catalog_id)
+      expect(subject.catalog_movies[0].id).to eq(expected_catalog_id)
     end
   end
 
@@ -66,7 +66,7 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
       expect(mini_json { |j| s.types j }).to eq(Array(String).new.to_json)
 
       # Now add an entry
-      s.catalogmovies << catalog
+      s << catalog
 
       # as we've included an entry in our catalogs, it should now be populated
       expect(mini_json { |json| s.resources json }).to eq([{"name": "catalog", "types": [catalog_type]}].to_json)

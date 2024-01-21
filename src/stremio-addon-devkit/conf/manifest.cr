@@ -149,6 +149,72 @@ module Stremio::Addon::DevKit::Conf
     #  # TODO:  See https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md#addon-catalogs
     # end
 
+    #
+    # Catalog
+    #
+
+    # expanded macro magic
+    @[JSON::Field(ignore: true)]
+    property catalog_movies = [] of CatalogMovie
+
+    def each_catalog(&block)
+      catalog_movies.each do |movie|
+        yield movie
+      end
+    end
+
+    def <<(x : CatalogMovie) : self
+      catalog_movies << x
+      self
+    end
+
+    @[JSON::FakeField]
+    def catalogs(json : ::JSON::Builder) : Nil
+      json.array do
+        each_catalog do |catalog|
+          catalog.to_json json
+        end
+      end
+    end
+
+    #
+    # Resource
+    #
+    def resources() : Array(ManifestResource)
+      result = [] of ManifestResource
+
+      resource = ManifestResource.new ResourceType::Catalog
+      each_catalog do |catalog|
+        resource.types << catalog.type
+      end
+      result << resource unless resource.types.empty?
+
+      result
+    end
+
+    @[JSON::FakeField]
+    def resources(json : ::JSON::Builder) : Nil
+      resources.to_json json
+    end
+
+    def types() : Set( ContentType )
+      type_set = Set( ContentType ).new
+
+      resources.each do |resource|
+        type_set.concat resource.types
+      end
+
+      type_set
+    end
+    @[JSON::FakeField]
+    def types(json : ::JSON::Builder) : Nil
+      types.to_json json
+    end
+
+    #
+    # idPrefixes
+    #
+
     @[JSON::FakeField]
     def idPrefixes(json : ::JSON::Builder) : Nil
       json.array do
@@ -161,7 +227,7 @@ module Stremio::Addon::DevKit::Conf
   end
 
   class Manifest < ManifestBase
-    bind_resources(ResourceType, ContentType, [{enum: ResourceType::Catalog, as: CatalogMovie, property_name: :catalog_movies}])
+    #bind_resources(ResourceType, ContentType, [{enum: ResourceType::Catalog, as: CatalogMovie, property_name: :catalog_movies}])
 
     # alias CatalogMovieType = CatalogMovie(ContentT)
 

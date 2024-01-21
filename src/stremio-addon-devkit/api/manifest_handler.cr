@@ -21,9 +21,9 @@ module Stremio::Addon::DevKit::Api
     # If `&handler` returns `nil`, this means that the callback will provide
     # the response
     def route_catalogs(manifest, &handler : HTTP::Server::Context, CatalogMovieRequest -> CatalogMovieResponse?)
-      resource = Conf::ResourceType::CatalogMovie
+      resource = Conf::ResourceType::Catalog
 
-      manifest.catalogs.each do |catalog|
+      manifest.catalog_movies.each do |catalog|
         self.get "/#{resource}/#{catalog.type}/#{catalog.id}.json" do |env|
           addon = CatalogMovieRequest.new(manifest, catalog).parse(env)
           response = handler.call(env, addon)
@@ -57,9 +57,9 @@ module Stremio::Addon::DevKit::Api
       callbacks = MultiBlockHandler.new
       yield callbacks
 
-      if !callbacks.catalog_movie? && !manifest.catalogs.empty?
+      if !callbacks.catalog_movie? && !manifest.catalog_movies.empty?
         raise ManifestBindingError.new("Movie CatalogMovies defined, but catalog_movie callback was not provided")
-      elsif !manifest.catalogs.empty?
+      elsif !manifest.catalog_movies.empty?
         route_catalogs(manifest, &callbacks.catalog_movie)
       end
 
