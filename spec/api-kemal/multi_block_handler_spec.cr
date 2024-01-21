@@ -10,15 +10,14 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
     name: "DemoAddon",
     description: "An example stremio addon",
     version: "0.0.1") do |conf|
-    conf.catalogs << Conf::Catalog.new(
-      type: Conf::ContentType::Movie,
+    conf << Conf::CatalogMovie.new(
       id: "movie4u",
       name: "Movies for you")
   end }
 
   let(movie_request) {
     m = manifest
-    Api::CatalogMovieRequest.new(m, m.catalogs[0])
+    Api::CatalogMovieRequest.new(m, m.catalog_movies[0])
   }
   let(env) {
     request = HTTP::Request.new("GET", "/")

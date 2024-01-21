@@ -7,7 +7,7 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
   alias ResourceType = Stremio::Addon::DevKit::Conf::ResourceType
   alias ContentType = Stremio::Addon::DevKit::Conf::ContentType
 
-  alias Catalog = Stremio::Addon::DevKit::Conf::Catalog
+  alias CatalogMovie = Stremio::Addon::DevKit::Conf::CatalogMovie
 
   let(id) { "com.stremio.addon.example" }
   let(name) { "DemoAddon" }
@@ -38,18 +38,18 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
       # Suitable for inline constructing within unit tests
       subject = Manifest.build(id, name, description, version) do |conf|
         ran_callback = true
-        conf.catalogs << Catalog.new(ContentType::Movie, expected_catalog_id, "Movies for you")
+        conf.catalog_movies << CatalogMovie.new(expected_catalog_id, "Movies for you")
       end
 
       expect(ran_callback).to eq(true)
       expect(subject.name).to eq(name)
-      expect(subject.catalogs[0].id).to eq(expected_catalog_id)
+      expect(subject.catalog_movies[0].id).to eq(expected_catalog_id)
     end
   end
 
   describe "#to_json" do
     let(catalog_type) { ContentType::Movie }
-    let(catalog) { Catalog.new(catalog_type, "movie4u", "Movies for you") }
+    let(catalog) { CatalogMovie.new("movie4u", "Movies for you") }
     subject { Manifest.new(id, name, description, version) }
 
     it "generates json" do
@@ -66,7 +66,7 @@ Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
       expect(mini_json { |j| s.types j }).to eq(Array(String).new.to_json)
 
       # Now add an entry
-      s.catalogs << catalog
+      s << catalog
 
       # as we've included an entry in our catalogs, it should now be populated
       expect(mini_json { |json| s.resources json }).to eq([{"name": "catalog", "types": [catalog_type]}].to_json)

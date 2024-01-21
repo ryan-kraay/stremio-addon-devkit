@@ -1,4 +1,5 @@
 require "./catalog_movie_request"
+require "./catalog_movie_response"
 require "./manifest_response"
 require "./manifest_request"
 

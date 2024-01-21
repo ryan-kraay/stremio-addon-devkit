@@ -23,7 +23,7 @@ module Stremio::Addon::DevKit::Api
     def route_catalogs(manifest, &handler : HTTP::Server::Context, CatalogMovieRequest -> CatalogMovieResponse?)
       resource = Conf::ResourceType::Catalog
 
-      manifest.catalogs.each do |catalog|
+      manifest.catalog_movies.each do |catalog|
         self.get "/#{resource}/#{catalog.type}/#{catalog.id}.json" do |env|
           addon = CatalogMovieRequest.new(manifest, catalog).parse(env)
           response = handler.call(env, addon)
@@ -57,9 +57,9 @@ module Stremio::Addon::DevKit::Api
       callbacks = MultiBlockHandler.new
       yield callbacks
 
-      if !callbacks.catalog_movie? && !manifest.catalogs.empty?
-        raise ManifestBindingError.new("Movie Catalogs defined, but catalog_movie callback was not provided")
-      elsif !manifest.catalogs.empty?
+      if !callbacks.catalog_movie? && !manifest.catalog_movies.empty?
+        raise ManifestBindingError.new("Movie CatalogMovies defined, but catalog_movie callback was not provided")
+      elsif !manifest.catalog_movies.empty?
         route_catalogs(manifest, &callbacks.catalog_movie)
       end
 

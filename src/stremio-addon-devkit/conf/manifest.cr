@@ -42,7 +42,7 @@ module Stremio::Addon::DevKit::Conf
 
   # A Manifest consists of a collection of ResourceTypes
   #  Source: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md
-  class ManifestBase
+  class Manifest
     include JSON::Serializable
     include JSON::Serializable::Fake
 
@@ -56,77 +56,6 @@ module Stremio::Addon::DevKit::Conf
     getter version : String
     # `logo`: **optional** - string, a url to a small logo to use in stremio (ie: https://www.stremio.com/website/stremio-logo-small.png)
     getter logo : String?
-
-    # This is the glue that binds a manifest:
-    #   1. To a ResourceType (ie: meta, catalog, etc)
-    #   2. To a ContentType (ie: movie, series, tv, etc)
-    #   3. To an class/implementation (ie: ::Catalog(ContentType).new)
-    #
-    # This macro does a lot of magic in an attempt to normalize some of the irregularies in
-    #  the stremio manifest (ie: the use of "catalog" everywhere, except in the root of the manifest, where it's "catalogs".
-    #  Except for "subtitles", which is "subtitles" everywhere... and "meta" which only appears as a "resources" entry))
-    #
-    # URL's take the form of: https://you.domain/<userdata?>/<resource_type>/<content_type>/<content-specific-data/...
-    #
-    # Due to these edge-cases, we've created the following
-    # TODO: {
-    #        "name": "meta",
-    #        "types": ["movie"],
-    #        "idPrefixes": ["hiwrld_"]
-    #    }
-    #
-    macro bind_resources(resource_type, content_type, list)
-      {% properties = {} of Nil => Nil %}
-      {% for ann in list %}
-        {% unless ann[:ignore] %}
-          {% plural_form = ((ann && ann[:plural_name]) || "#{ann[:enum].names[-1].id}s".downcase) %}
-          {%
-            properties[ann[:enum].id] = {
-              plural_name:   plural_form.stringify,
-              property_name: ((ann && ann[:property_name]) || plural_form).id,
-              class:         ann[:as],
-            }
-          %}
-        {% end %}
-      {% end %}
-
-      {% for resource_enum, prop in properties %}
-        property {{ prop[:property_name] }} = [] of {{ prop[:class] }}
-        #alias CatalogType = {{ prop[:class] }}.elem_type()
-      {% end %}
-
-      def resources() : Array(ManifestResource)
-        result = [] of ManifestResource
-
-        {% for resource_enum, prop in properties %}
-          manifest_resource = ManifestResource.new {{ resource_enum }}
-          ::Stremio::Addon::DevKit::Conf.asResource(manifest_resource, {{ prop[:property_name] }} )
-          # manifest_resource.types **cannot** be empty, unless we don't have any prop[:property_name]... hence we check if idPrefixes has content.
-          # if it has content, this means it's a bug in asResource().  If it's empty, it simply means we don't have any of this type
-          raise ArgumentError.new("ManifestResource types:[] for {{ prop[:property_name] }} cannot be empty") if manifest_resource.types.empty? && !manifest_resource.idPrefixes.empty?
-          result << manifest_resource unless manifest_resource.types.empty?
-        {% end %}
-
-        result
-      end
-
-      @[JSON::FakeField]
-      def resources(json : ::JSON::Builder) : Nil
-        resources.to_json json
-      end
-
-      @[JSON::FakeField]
-      def types(json : ::JSON::Builder) : Nil
-        # Iterate through all resource_types and get the content_type
-        type_set = Set( {{ content_type }} ).new
-
-        resources.each do |resource|
-          type_set.concat resource.types
-        end
-
-        type_set.to_json json
-      end
-    end
 
     # @[JSON::FakeField]
     # def meta(json : ::JSON::Builder) : Nil
@@ -145,9 +74,76 @@ module Stremio::Addon::DevKit::Conf
     # end
 
     # @[JSON::FakeField]
-    # def addonCatalogs(json : ::JSON::Builder) : Nil
+    # def addonCatalogMovies(json : ::JSON::Builder) : Nil
     #  # TODO:  See https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md#addon-catalogs
     # end
+
+    #
+    # Catalog
+    #
+
+    # expanded macro magic
+    @[JSON::Field(ignore: true)]
+    property catalog_movies = [] of CatalogMovie
+
+    def each_catalog(&block)
+      catalog_movies.each do |movie|
+        yield movie
+      end
+    end
+
+    def <<(x : CatalogMovie) : self
+      catalog_movies << x
+      self
+    end
+
+    @[JSON::FakeField]
+    def catalogs(json : ::JSON::Builder) : Nil
+      json.array do
+        each_catalog do |catalog|
+          catalog.to_json json
+        end
+      end
+    end
+
+    #
+    # Resource
+    #
+    def resources : Array(ManifestResource)
+      result = [] of ManifestResource
+
+      resource = ManifestResource.new ResourceType::Catalog
+      each_catalog do |catalog|
+        resource.types << catalog.type
+      end
+      result << resource unless resource.types.empty?
+
+      result
+    end
+
+    @[JSON::FakeField]
+    def resources(json : ::JSON::Builder) : Nil
+      resources.to_json json
+    end
+
+    def types : Set(ContentType)
+      type_set = Set(ContentType).new
+
+      resources.each do |resource|
+        type_set.concat resource.types
+      end
+
+      type_set
+    end
+
+    @[JSON::FakeField]
+    def types(json : ::JSON::Builder) : Nil
+      types.to_json json
+    end
+
+    #
+    # idPrefixes
+    #
 
     @[JSON::FakeField]
     def idPrefixes(json : ::JSON::Builder) : Nil
@@ -158,12 +154,6 @@ module Stremio::Addon::DevKit::Conf
 
     def initialize(@id, @name, @description, @version, @logo = nil)
     end
-  end
-
-  class Manifest < ManifestBase
-    bind_resources(ResourceType, ContentType, [{enum: ResourceType::Catalog, as: Catalog}])
-
-    # alias CatalogType = Catalog(ContentT)
 
     # A static function call to inline the complete construction
     # of a manifest object.
@@ -175,7 +165,7 @@ module Stremio::Addon::DevKit::Conf
     #   name: "DemoAddon",
     #   description: "An example stremio addon",
     #   version: "0.0.1") do |conf|
-    #   conf.catalogs << Catalog.new(ContentType::Movie, "movie4u", "Movies for you")
+    #   conf << CatalogMovie.new(ContentType::Movie, "movie4u", "Movies for you")
     # end
     # ```
     #

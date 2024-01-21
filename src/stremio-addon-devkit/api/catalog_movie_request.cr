@@ -2,9 +2,9 @@ require "./stremio_base_request"
 
 module Stremio::Addon::DevKit::Api
   class CatalogMovieRequest < StremioBaseRequest
-    getter catalog : Conf::Catalog
+    getter catalog : Conf::CatalogMovie
 
-    def initialize(@manifest : Conf::Manifest, @catalog : Conf::Catalog)
+    def initialize(@manifest : Conf::Manifest, @catalog : Conf::CatalogMovie)
     end
 
     def parse(env)
