@@ -1,4 +1,4 @@
-module Stremio::Addon::DevKit::Conf
+module Stremio::Addon::DevKit
   # This should be customized based on *your* addon
   #  See: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md#filtering-properties
   #

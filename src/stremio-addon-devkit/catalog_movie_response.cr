@@ -1,23 +1,23 @@
 require "json"
 require "json-serializable-fake"
 require "uri"
-require "../conf/content_type"
+require "./content_type"
 
-module Stremio::Addon::DevKit::Api
+module Stremio::Addon::DevKit
   # Represents a valid catalog.json response
   # source: https://stremio.github.io/stremio-addon-guide/step3
   # source: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/meta.md
   # @[JSON::Serializable::Options(ignore_deserialize: true)]
   class CatalogMovieResponse
     include JSON::Serializable
-    alias Conf = Stremio::Addon::DevKit::Conf
+    alias Conf = Stremio::Addon::DevKit
 
     class Meta
       include JSON::Serializable
       include JSON::Serializable::Fake
 
       # The `type` should match the catalog type.
-      property type : Conf::ContentType
+      property type : ContentType
 
       # You can use any unique string for the `id`.
       # In this case we use the corresponding IMDB ID.
@@ -34,7 +34,7 @@ module Stremio::Addon::DevKit::Api
       # Stremio's catalog consists of grid of images, fetched from
       # the `poster` field of every item. It should be a
       # valid URL to an image.
-      @[JSON::Field(converter: Stremio::Addon::DevKit::Api::CatalogMovieResponse::Meta::URIConverter)]
+      @[JSON::Field(converter: Stremio::Addon::DevKit::CatalogMovieResponse::Meta::URIConverter)]
       property poster : URI?
 
       # The `genre` is just a human-readable descriptive field
@@ -47,7 +47,7 @@ module Stremio::Addon::DevKit::Api
         genre.to_json json unless genre.empty?
       end
 
-      def initialize(@type : Conf::ContentType, @id : String, @name : String?, @poster : URI?, @genre = Array(String).new)
+      def initialize(@type : ContentType, @id : String, @name : String?, @poster : URI?, @genre = Array(String).new)
       end
 
       # Adds custom handling of the to/from json for URI objects

@@ -1,13 +1,15 @@
 require "./spec_helper"
-require "../../src/stremio-addon-devkit/conf/manifest"
+# stremio-addon-devkit/conf should include everything to construct
+#  a manifest object and it's friends.
+require "../../src/stremio-addon-devkit/conf"
 
-Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
-  alias Manifest = Stremio::Addon::DevKit::Conf::Manifest
+Spectator.describe Stremio::Addon::DevKit::Manifest do
+  alias Manifest = Stremio::Addon::DevKit::Manifest
 
-  alias ResourceType = Stremio::Addon::DevKit::Conf::ResourceType
-  alias ContentType = Stremio::Addon::DevKit::Conf::ContentType
+  alias ResourceType = Stremio::Addon::DevKit::ResourceType
+  alias ContentType = Stremio::Addon::DevKit::ContentType
 
-  alias CatalogMovie = Stremio::Addon::DevKit::Conf::CatalogMovie
+  alias CatalogMovie = Stremio::Addon::DevKit::CatalogMovie
 
   let(id) { "com.stremio.addon.example" }
   let(name) { "DemoAddon" }

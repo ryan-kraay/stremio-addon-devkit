@@ -1,6 +1,6 @@
 require "./route_handler"
 
-module Stremio::Addon::DevKit::Api
+module Stremio::Addon::DevKit
   #
   # Some older stremio clients (ie: Android TV) incorrectly encode
   # paths, so they're incompatible with https://datatracker.ietf.org/doc/html/rfc3986#section-2.3

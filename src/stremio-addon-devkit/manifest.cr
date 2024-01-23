@@ -3,7 +3,7 @@ require "json-serializable-fake"
 require "./catalog"
 require "./resource_type"
 
-module Stremio::Addon::DevKit::Conf
+module Stremio::Addon::DevKit
   # Represents a single entry in the "resources: []" described in the manifest.json
   #
   # There is a more condensed form of this (ie: `resources: ["catalog"]`).  However, we also use this more

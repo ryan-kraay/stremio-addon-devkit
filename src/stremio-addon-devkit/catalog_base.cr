@@ -2,7 +2,7 @@ require "./content_type"
 require "json"
 require "json-serializable-fake"
 
-module Stremio::Addon::DevKit::Conf
+module Stremio::Addon::DevKit
   @[JSON::Serializable::Options(ignore_deserialize: true)]
   abstract class CatalogBase
     include JSON::Serializable

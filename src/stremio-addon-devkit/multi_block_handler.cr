@@ -3,7 +3,7 @@ require "./catalog_movie_response"
 require "./manifest_response"
 require "./manifest_request"
 
-module Stremio::Addon::DevKit::Api
+module Stremio::Addon::DevKit
   # Crystal, by design, does not support passing multiple blocks
   # so, we fake it by creating a method, which will capture a block
   class MultiBlockHandler

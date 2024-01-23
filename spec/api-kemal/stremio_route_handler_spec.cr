@@ -1,10 +1,10 @@
-require "../../src/stremio-addon-devkit/api/stremio_route_handler"
+require "../../src/stremio-addon-devkit/stremio_route_handler"
 require "./spec_helper"
 
 Kemal.run
 
-Spectator.describe Stremio::Addon::DevKit::Api::StremioRouteHandler do
-  alias StremioRouteHandler = Stremio::Addon::DevKit::Api::StremioRouteHandler
+Spectator.describe Stremio::Addon::DevKit::StremioRouteHandler do
+  alias StremioRouteHandler = Stremio::Addon::DevKit::StremioRouteHandler
 
   let(router) { StremioRouteHandler.new }
   before_each do

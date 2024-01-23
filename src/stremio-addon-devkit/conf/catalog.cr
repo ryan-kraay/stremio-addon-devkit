@@ -1,1 +1,0 @@
-require "./catalog_movie"

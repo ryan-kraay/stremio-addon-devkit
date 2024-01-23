@@ -11,9 +11,9 @@ require "http/server/handler"
 require "http/server/context"
 require "radix"
 require "uri"
-require "../ext"
+require "./ext"
 
-module Stremio::Addon::DevKit::Api
+module Stremio::Addon::DevKit
   struct Route
     getter method, path, handler
     @handler : HTTP::Server::Context -> String
