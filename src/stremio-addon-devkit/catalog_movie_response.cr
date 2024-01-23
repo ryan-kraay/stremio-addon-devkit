@@ -10,14 +10,14 @@ module Stremio::Addon::DevKit::Api
   # @[JSON::Serializable::Options(ignore_deserialize: true)]
   class CatalogMovieResponse
     include JSON::Serializable
-    alias Conf = Stremio::Addon::DevKit::Conf
+    alias Conf = Stremio::Addon::DevKit
 
     class Meta
       include JSON::Serializable
       include JSON::Serializable::Fake
 
       # The `type` should match the catalog type.
-      property type : Conf::ContentType
+      property type : ContentType
 
       # You can use any unique string for the `id`.
       # In this case we use the corresponding IMDB ID.
@@ -47,7 +47,7 @@ module Stremio::Addon::DevKit::Api
         genre.to_json json unless genre.empty?
       end
 
-      def initialize(@type : Conf::ContentType, @id : String, @name : String?, @poster : URI?, @genre = Array(String).new)
+      def initialize(@type : ContentType, @id : String, @name : String?, @poster : URI?, @genre = Array(String).new)
       end
 
       # Adds custom handling of the to/from json for URI objects

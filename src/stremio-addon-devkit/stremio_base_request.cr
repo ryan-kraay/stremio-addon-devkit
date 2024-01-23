@@ -2,11 +2,11 @@ require "./manifest"
 
 module Stremio::Addon::DevKit::Api
   abstract class StremioBaseRequest
-    alias Conf = Stremio::Addon::DevKit::Conf
+    alias Conf = Stremio::Addon::DevKit
 
-    getter manifest : Conf::Manifest
+    getter manifest : Manifest
 
-    def initialize(@manifest : Conf::Manifest)
+    def initialize(@manifest : Manifest)
     end
 
     # Extract meaningful content from env.request

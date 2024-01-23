@@ -1,4 +1,4 @@
-module Stremio::Addon::DevKit::Conf
+module Stremio::Addon::DevKit
   # These are the possible content types supported by Stremio
   #  See: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/content.types.md
   enum ContentType
