@@ -3,18 +3,18 @@ require "../../src/stremio-addon-devkit/catalog_movie_response"
 
 Spectator.describe Stremio::Addon::DevKit::Api::CatalogMovieResponse do
   alias Api = Stremio::Addon::DevKit::Api
-  alias Conf = Stremio::Addon::DevKit::Conf
+  alias DevKit = Stremio::Addon::DevKit
 
   subject {
     Api::CatalogMovieResponse.build do |catalog|
       catalog.metas << Api::CatalogMovieResponse::Meta.new(
-        Conf::ContentType::Movie,
+        DevKit::ContentType::Movie,
         "tt0032138",
         "The Wizard of Oz",
         URI.parse("https://images.metahub.space/poster/medium/tt0032138/img")
       )
       catalog.metas << Api::CatalogMovieResponse::Meta.new(
-        Conf::ContentType::Movie,
+        DevKit::ContentType::Movie,
         "tt0017136",
         "Metropolis",
         URI.parse("https://images.metahub.space/poster/medium/tt0017136/img"),

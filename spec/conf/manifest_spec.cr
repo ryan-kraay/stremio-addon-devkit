@@ -1,13 +1,13 @@
 require "./spec_helper"
 require "../../src/stremio-addon-devkit/manifest"
 
-Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
-  alias Manifest = Stremio::Addon::DevKit::Conf::Manifest
+Spectator.describe Stremio::Addon::DevKit::Manifest do
+  alias Manifest = Stremio::Addon::DevKit::Manifest
 
-  alias ResourceType = Stremio::Addon::DevKit::Conf::ResourceType
-  alias ContentType = Stremio::Addon::DevKit::Conf::ContentType
+  alias ResourceType = Stremio::Addon::DevKit::ResourceType
+  alias ContentType = Stremio::Addon::DevKit::ContentType
 
-  alias CatalogMovie = Stremio::Addon::DevKit::Conf::CatalogMovie
+  alias CatalogMovie = Stremio::Addon::DevKit::CatalogMovie
 
   let(id) { "com.stremio.addon.example" }
   let(name) { "DemoAddon" }

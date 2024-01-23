@@ -6,14 +6,14 @@ Kemal.run
 
 Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   alias Api = Stremio::Addon::DevKit::Api
-  alias Conf = Stremio::Addon::DevKit::Conf
+  alias DevKit = Stremio::Addon::DevKit
 
-  let(manifest) { Conf::Manifest.build(
+  let(manifest) { DevKit::Manifest.build(
     id: "com.stremio.addon.example",
     name: "DemoAddon",
     description: "An example stremio addon",
     version: "0.0.1") do |conf|
-    conf << Conf::CatalogMovie.new(
+    conf << DevKit::CatalogMovie.new(
       id: "movie4u",
       name: "Movies for you")
   end }
@@ -26,7 +26,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   end
 
   describe "#route_manifest" do
-    let(manifest) { Conf::Manifest.build(
+    let(manifest) { DevKit::Manifest.build(
       id: "com.stremio.addon.example",
       name: "DemoAddon",
       description: "An example stremio addon",
@@ -92,12 +92,12 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       catalog_id = "movie-4u"
       expected_destination = "/catalog/movie/#{catalog_id}.json"
       expected_url = "/catalog/movie/movie%2D4u.json"
-      manifest = Conf::Manifest.build(
+      manifest = DevKit::Manifest.build(
         id: "com.stremio.addon.example",
         name: "DemoAddon",
         description: "An example stremio addon",
         version: "0.0.1") do |conf|
-        conf << Conf::CatalogMovie.new(
+        conf << DevKit::CatalogMovie.new(
           id: catalog_id,
           name: "Movies for you")
       end
@@ -116,7 +116,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       router.route_catalogs(manifest) do |env, addon|
         Api::CatalogMovieResponse.build do |catalog|
           catalog.metas << Api::CatalogMovieResponse::Meta.new(
-            Conf::ContentType::Movie,
+            DevKit::ContentType::Movie,
             "tt0032138",
             "The Wizard of Oz",
             URI.parse("https://images.metahub.space/poster/medium/tt0032138/img")
@@ -176,7 +176,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
     end
 
     it "expects callbacks if catalog resources exist" do
-      empty_manifest = Conf::Manifest.new(
+      empty_manifest = DevKit::Manifest.new(
         id: "com.stremio.addon.example-2",
         name: "DemoAddon",
         description: "An example stremio addon",

@@ -3,14 +3,14 @@ require "./spec_helper"
 
 Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   alias Api = Stremio::Addon::DevKit::Api
-  alias Conf = Stremio::Addon::DevKit::Conf
+  alias DevKit = Stremio::Addon::DevKit
 
-  let(manifest) { Conf::Manifest.build(
+  let(manifest) { DevKit::Manifest.build(
     id: "com.stremio.addon.example",
     name: "DemoAddon",
     description: "An example stremio addon",
     version: "0.0.1") do |conf|
-    conf << Conf::CatalogMovie.new(
+    conf << DevKit::CatalogMovie.new(
       id: "movie4u",
       name: "Movies for you")
   end }
