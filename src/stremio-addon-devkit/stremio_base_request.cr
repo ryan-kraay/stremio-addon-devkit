@@ -1,4 +1,4 @@
-require "../conf/manifest"
+require "./manifest"
 
 module Stremio::Addon::DevKit::Api
   abstract class StremioBaseRequest

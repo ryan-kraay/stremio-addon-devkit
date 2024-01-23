@@ -1,4 +1,4 @@
-require "../../src/stremio-addon-devkit/api/multi_block_handler"
+require "../../src/stremio-addon-devkit/multi_block_handler"
 require "./spec_helper"
 
 Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do

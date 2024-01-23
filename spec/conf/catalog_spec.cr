@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../../src/stremio-addon-devkit/conf/catalog"
+require "../../src/stremio-addon-devkit/catalog"
 
 Spectator.describe Stremio::Addon::DevKit::Conf::CatalogMovie do
   alias CatalogMovie = Stremio::Addon::DevKit::Conf::CatalogMovie

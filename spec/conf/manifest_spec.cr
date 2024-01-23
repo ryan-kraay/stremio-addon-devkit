@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../../src/stremio-addon-devkit/conf/manifest"
+require "../../src/stremio-addon-devkit/manifest"
 
 Spectator.describe Stremio::Addon::DevKit::Conf::Manifest do
   alias Manifest = Stremio::Addon::DevKit::Conf::Manifest

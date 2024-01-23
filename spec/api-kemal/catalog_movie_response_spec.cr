@@ -1,5 +1,5 @@
 require "./spec_helper"
-require "../../src/stremio-addon-devkit/api/catalog_movie_response"
+require "../../src/stremio-addon-devkit/catalog_movie_response"
 
 Spectator.describe Stremio::Addon::DevKit::Api::CatalogMovieResponse do
   alias Api = Stremio::Addon::DevKit::Api

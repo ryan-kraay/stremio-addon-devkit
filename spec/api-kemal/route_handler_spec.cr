@@ -1,4 +1,4 @@
-require "../../src/stremio-addon-devkit/api/route_handler"
+require "../../src/stremio-addon-devkit/route_handler"
 require "./spec_helper"
 
 get "/" do

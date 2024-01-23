@@ -1,5 +1,5 @@
-require "../../src/stremio-addon-devkit/api/manifest_handler"
-require "../../src/stremio-addon-devkit/conf"
+require "../../src/stremio-addon-devkit/manifest_handler"
+require "../../src/stremio-addon-devkit/manifest"
 require "./spec_helper"
 
 Kemal.run

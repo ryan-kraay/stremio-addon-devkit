@@ -1,7 +1,7 @@
 require "json"
 require "json-serializable-fake"
 require "uri"
-require "../conf/content_type"
+require "./content_type"
 
 module Stremio::Addon::DevKit::Api
   # Represents a valid catalog.json response

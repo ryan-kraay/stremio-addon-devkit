@@ -1,4 +1,4 @@
-require "../../src/stremio-addon-devkit/api/stremio_route_handler"
+require "../../src/stremio-addon-devkit/stremio_route_handler"
 require "./spec_helper"
 
 Kemal.run

@@ -11,7 +11,7 @@ require "http/server/handler"
 require "http/server/context"
 require "radix"
 require "uri"
-require "../ext"
+require "./ext"
 
 module Stremio::Addon::DevKit::Api
   struct Route
