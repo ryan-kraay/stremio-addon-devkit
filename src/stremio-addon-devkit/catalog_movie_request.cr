@@ -1,6 +1,6 @@
 require "./stremio_base_request"
 
-module Stremio::Addon::DevKit::Api
+module Stremio::Addon::DevKit
   class CatalogMovieRequest < StremioBaseRequest
     getter catalog : CatalogMovie
 

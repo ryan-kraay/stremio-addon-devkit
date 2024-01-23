@@ -1,6 +1,6 @@
 require "./manifest"
 
-module Stremio::Addon::DevKit::Api
+module Stremio::Addon::DevKit
   abstract class StremioBaseRequest
     alias Conf = Stremio::Addon::DevKit
 

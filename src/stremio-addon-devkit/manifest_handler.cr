@@ -9,7 +9,7 @@ require "./multi_block_handler"
 
 # require "../userdata/session"
 
-module Stremio::Addon::DevKit::Api
+module Stremio::Addon::DevKit
   class ManifestBindingError < Exception; end
 
   class ManifestHandler < StremioRouteHandler

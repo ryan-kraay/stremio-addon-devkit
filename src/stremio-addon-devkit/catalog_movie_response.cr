@@ -3,7 +3,7 @@ require "json-serializable-fake"
 require "uri"
 require "./content_type"
 
-module Stremio::Addon::DevKit::Api
+module Stremio::Addon::DevKit
   # Represents a valid catalog.json response
   # source: https://stremio.github.io/stremio-addon-guide/step3
   # source: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/meta.md
@@ -34,7 +34,7 @@ module Stremio::Addon::DevKit::Api
       # Stremio's catalog consists of grid of images, fetched from
       # the `poster` field of every item. It should be a
       # valid URL to an image.
-      @[JSON::Field(converter: Stremio::Addon::DevKit::Api::CatalogMovieResponse::Meta::URIConverter)]
+      @[JSON::Field(converter: Stremio::Addon::DevKit::CatalogMovieResponse::Meta::URIConverter)]
       property poster : URI?
 
       # The `genre` is just a human-readable descriptive field
