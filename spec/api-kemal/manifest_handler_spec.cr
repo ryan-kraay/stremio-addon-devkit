@@ -4,8 +4,7 @@ require "./spec_helper"
 
 Kemal.run
 
-Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
-  alias Api = Stremio::Addon::DevKit::Api
+Spectator.describe Stremio::Addon::DevKit::ManifestHandler do
   alias DevKit = Stremio::Addon::DevKit
 
   let(manifest) { DevKit::Manifest.build(
@@ -18,7 +17,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
       name: "Movies for you")
   end }
 
-  let(router) { Api::ManifestHandler.new }
+  let(router) { DevKit::ManifestHandler.new }
   before_each do
     reset_kemal do
       add_handler router
@@ -36,7 +35,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
 
     it "executes a proc when accessing a manifest endpoint" do
       accessed = false
-      handler = ->(env : HTTP::Server::Context, manifest : Api::ManifestRequest) {
+      handler = ->(env : HTTP::Server::Context, manifest : DevKit::ManifestRequest) {
         accessed = true
         nil
       }
@@ -64,7 +63,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   describe "#route_catalogs" do
     it "executes a proc when accessing a catalog endpoint" do
       accessed = false
-      handler = ->(env : HTTP::Server::Context, addon : Api::CatalogMovieRequest) {
+      handler = ->(env : HTTP::Server::Context, addon : DevKit::CatalogMovieRequest) {
         accessed = true
         nil
       }
@@ -114,8 +113,8 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
 
     it "converts a CatalogMovieResponse object into a valid http response" do
       router.route_catalogs(manifest) do |env, addon|
-        Api::CatalogMovieResponse.build do |catalog|
-          catalog.metas << Api::CatalogMovieResponse::Meta.new(
+        DevKit::CatalogMovieResponse.build do |catalog|
+          catalog.metas << DevKit::CatalogMovieResponse::Meta.new(
             DevKit::ContentType::Movie,
             "tt0032138",
             "The Wizard of Oz",
@@ -137,7 +136,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
   describe "#bind" do
     it "binds a manifest to a callback" do
       accessed = false
-      my_catalog_handler = ->(env : HTTP::Server::Context, addon : Api::CatalogMovieRequest) {
+      my_catalog_handler = ->(env : HTTP::Server::Context, addon : DevKit::CatalogMovieRequest) {
         accessed = true
         nil
       }
@@ -152,7 +151,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
     end
 
     it "does not allow the same manifest to be rebounded" do
-      my_catalog_handler = ->(env : HTTP::Server::Context, addon : Api::CatalogMovieRequest) { nil }
+      my_catalog_handler = ->(env : HTTP::Server::Context, addon : DevKit::CatalogMovieRequest) { nil }
 
       # The first invocation should create all the necessary routes
       expect do
@@ -172,7 +171,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
     it "raises an exception when a catalog is provided, but no callback is assigned" do
       expect do
         router.bind(manifest) { }
-      end.to raise_error Api::ManifestBindingError
+      end.to raise_error DevKit::ManifestBindingError
     end
 
     it "expects callbacks if catalog resources exist" do

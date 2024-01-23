@@ -1,8 +1,8 @@
 require "./spec_helper"
 require "../../src/stremio-addon-devkit/catalog_movie_request"
 
-Spectator.describe Stremio::Addon::DevKit::Api::CatalogMovieRequest do
-  alias CatalogMovieRequest = Stremio::Addon::DevKit::Api::CatalogMovieRequest
+Spectator.describe Stremio::Addon::DevKit::CatalogMovieRequest do
+  alias CatalogMovieRequest = Stremio::Addon::DevKit::CatalogMovieRequest
   alias DevKit = Stremio::Addon::DevKit
 
   let(manifest) { DevKit::Manifest.build(

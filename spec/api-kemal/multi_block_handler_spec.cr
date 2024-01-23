@@ -1,8 +1,7 @@
 require "../../src/stremio-addon-devkit/multi_block_handler"
 require "./spec_helper"
 
-Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
-  alias Api = Stremio::Addon::DevKit::Api
+Spectator.describe Stremio::Addon::DevKit::ManifestHandler do
   alias DevKit = Stremio::Addon::DevKit
 
   let(manifest) { DevKit::Manifest.build(
@@ -17,7 +16,7 @@ Spectator.describe Stremio::Addon::DevKit::Api::ManifestHandler do
 
   let(movie_request) {
     m = manifest
-    Api::CatalogMovieRequest.new(m, m.catalog_movies[0])
+    DevKit::CatalogMovieRequest.new(m, m.catalog_movies[0])
   }
   let(env) {
     request = HTTP::Request.new("GET", "/")
@@ -33,7 +32,7 @@ EOL
     response = HTTP::Server::Response.new(response_text)
     HTTP::Server::Context.new(request, response)
   }
-  subject { Api::MultiBlockHandler.new }
+  subject { DevKit::MultiBlockHandler.new }
 
   describe "#initialize" do
     it "will not raise an error" do
@@ -67,7 +66,7 @@ EOL
 
     it "is possible to replace the callback with a proc" do
       accessed = false
-      proc = ->(env : HTTP::Server::Context, addon : Api::CatalogMovieRequest) { accessed = true; nil }
+      proc = ->(env : HTTP::Server::Context, addon : DevKit::CatalogMovieRequest) { accessed = true; nil }
 
       s = subject
       s.catalog_movie &proc
