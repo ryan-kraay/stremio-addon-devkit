@@ -1,6 +1,7 @@
-require "../../src/stremio-addon-devkit/manifest_handler"
-require "../../src/stremio-addon-devkit/manifest"
 require "./spec_helper"
+# stremio-addon-devkit/api should include everything to construct
+#  stremio api (as a side-effect it may include most of stremio-addon-devkit/conf)
+require "../../src/stremio-addon-devkit/api"
 
 Kemal.run
 

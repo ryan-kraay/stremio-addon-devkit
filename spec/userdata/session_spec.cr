@@ -1,5 +1,7 @@
 require "./spec_helper"
-require "../../src/stremio-addon-devkit/userdata/session"
+# stremio-addon-devkit/userdata is the main file to enable encryption/decryption
+# of user content
+require "../../src/stremio-addon-devkit/userdata"
 
 Spectator.describe Stremio::Addon::DevKit::UserData::Session do
   alias UserData = Stremio::Addon::DevKit::UserData

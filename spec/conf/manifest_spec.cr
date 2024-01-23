@@ -1,5 +1,7 @@
 require "./spec_helper"
-require "../../src/stremio-addon-devkit/manifest"
+# stremio-addon-devkit/conf should include everything to construct
+#  a manifest object and it's friends.
+require "../../src/stremio-addon-devkit/conf"
 
 Spectator.describe Stremio::Addon::DevKit::Manifest do
   alias Manifest = Stremio::Addon::DevKit::Manifest
