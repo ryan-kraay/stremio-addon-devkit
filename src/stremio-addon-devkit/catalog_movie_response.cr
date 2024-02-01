@@ -17,7 +17,7 @@ module Stremio::Addon::DevKit
       include JSON::Serializable::Fake
 
       # The `type` should match the catalog type.
-      property type : ContentType
+      getter type : ContentType
 
       # You can use any unique string for the `id`.
       # In this case we use the corresponding IMDB ID.
@@ -47,7 +47,8 @@ module Stremio::Addon::DevKit
         genre.to_json json unless genre.empty?
       end
 
-      def initialize(@type : ContentType, @id : String, @name : String?, @poster : URI?, @genre = Array(String).new)
+      def initialize(@id : String, @name : String?, @poster : URI?, @genre = Array(String).new)
+        @type = ContentType::Movie
       end
 
       # Adds custom handling of the to/from json for URI objects
