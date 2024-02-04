@@ -11,12 +11,12 @@ Spectator.describe Stremio::Addon::DevKit::CatalogMovieResponse do
         "The Wizard of Oz",
         URI.parse("https://images.metahub.space/poster/medium/tt0032138/img")
       )
-      catalog.metas << DevKit::CatalogMovieResponse::MetaPreview.new(
+      catalog.metas << DevKit::CatalogMovieResponse::MetaPreview.build(
         "tt0017136",
         "Metropolis",
-        URI.parse("https://images.metahub.space/poster/medium/tt0017136/img"),
-        ["Drama", "Sci-Fi"]
-      )
+        URI.parse("https://images.metahub.space/poster/medium/tt0017136/img")) do |meta|
+          meta.genre = ["Drama", "Sci-Fi"]
+        end
     end
   }
   it "can be constructed" do

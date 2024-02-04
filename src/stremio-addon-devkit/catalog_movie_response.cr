@@ -18,6 +18,12 @@ module Stremio::Addon::DevKit
       include JSON::Serializable
       include JSON::Serializable::Fake
 
+      def self.build(*args, **named_args, &)
+        matapreview = MetaPreview.new(*args, **named_args)
+        yield matapreview
+        return matapreview
+      end
+
       # The `type` should match the catalog type.
       getter type : ContentType
 
@@ -31,13 +37,22 @@ module Stremio::Addon::DevKit
       id : String
 
       # The `name` is just a human-readable descriptive field
-      property name : String?
+      property name : String
 
       # Stremio's catalog consists of grid of images, fetched from
       # the `poster` field of every item. It should be a
       # valid URL to an image.
       @[JSON::Field(converter: Stremio::Addon::DevKit::CatalogMovieResponse::MetaPreview::URIConverter)]
-      property poster : URI?
+      property poster : URI
+
+      enum PosterShape
+        Square    # 1:1 aspect ratio
+        Poster    # 1:0.675 aspect ratio (IMDb poster type)
+        Landscape # 1:1.77 aspect ratio
+      end
+      property posterShape : PosterShape = PosterShape::Poster
+
+      #### Additional Parameters that are used for the Discover Page Sidebar:
 
       # The `genre` is just a human-readable descriptive field
       # TODO: Instead of an Array(String) it should be a generic Array(Enum-of-Genres)
@@ -49,7 +64,8 @@ module Stremio::Addon::DevKit
         genre.to_json json unless genre.empty?
       end
 
-      def initialize(@id : String, @name : String?, @poster : URI?, @genre = Array(String).new)
+      def initialize(@id : String, @name : String, @poster : URI)
+        @genre = Array(String).new
         @type = ContentType::Movie
       end
 
