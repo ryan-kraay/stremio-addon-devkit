@@ -6,12 +6,12 @@ Spectator.describe Stremio::Addon::DevKit::CatalogMovieResponse do
 
   subject {
     DevKit::CatalogMovieResponse.build do |catalog|
-      catalog.metas << DevKit::CatalogMovieResponse::Meta.new(
+      catalog.metas << DevKit::CatalogMovieResponse::MetaPreview.new(
         "tt0032138",
         "The Wizard of Oz",
         URI.parse("https://images.metahub.space/poster/medium/tt0032138/img")
       )
-      catalog.metas << DevKit::CatalogMovieResponse::Meta.new(
+      catalog.metas << DevKit::CatalogMovieResponse::MetaPreview.new(
         "tt0017136",
         "Metropolis",
         URI.parse("https://images.metahub.space/poster/medium/tt0017136/img"),

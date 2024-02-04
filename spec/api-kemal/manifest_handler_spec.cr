@@ -115,7 +115,7 @@ Spectator.describe Stremio::Addon::DevKit::ManifestHandler do
     it "converts a CatalogMovieResponse object into a valid http response" do
       router.route_catalogs(manifest) do |env, addon|
         DevKit::CatalogMovieResponse.build do |catalog|
-          catalog.metas << DevKit::CatalogMovieResponse::Meta.new(
+          catalog.metas << DevKit::CatalogMovieResponse::MetaPreview.new(
             "tt0032138",
             "The Wizard of Oz",
             URI.parse("https://images.metahub.space/poster/medium/tt0032138/img")

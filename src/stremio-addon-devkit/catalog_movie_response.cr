@@ -12,7 +12,9 @@ module Stremio::Addon::DevKit
     include JSON::Serializable
     alias Conf = Stremio::Addon::DevKit
 
-    class Meta
+    # This is a shorter variant of the Meta Object
+    # source: stremio-addon-sdk/docs/api/responses/meta.md
+    class MetaPreview
       include JSON::Serializable
       include JSON::Serializable::Fake
 
@@ -34,7 +36,7 @@ module Stremio::Addon::DevKit
       # Stremio's catalog consists of grid of images, fetched from
       # the `poster` field of every item. It should be a
       # valid URL to an image.
-      @[JSON::Field(converter: Stremio::Addon::DevKit::CatalogMovieResponse::Meta::URIConverter)]
+      @[JSON::Field(converter: Stremio::Addon::DevKit::CatalogMovieResponse::MetaPreview::URIConverter)]
       property poster : URI?
 
       # The `genre` is just a human-readable descriptive field
@@ -64,9 +66,9 @@ module Stremio::Addon::DevKit
       end
     end
 
-    property metas : Array(Meta)
+    property metas : Array(MetaPreview)
 
-    def initialize(@metas = Array(Meta).new)
+    def initialize(@metas = Array(MetaPreview).new)
     end
 
     def self.build(&block)
