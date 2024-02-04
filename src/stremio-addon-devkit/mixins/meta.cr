@@ -1,0 +1,108 @@
+require "json"
+require "json-serializable-fake"
+require "uri"
+require "../content_type"
+
+
+module Stremio::Addon::DevKit::Mixins
+
+      # Adds custom handling of the to/from json for URI objects
+      module URIConverter
+        def self.to_json(uri : URI, json : JSON::Builder) : Nil
+          json.string(uri.to_s)
+        end
+
+        # def self.from_json(value : JSON::PullParser) : URI
+        #  # TODO fix URI parse syntax to parse a string
+        #  URI.parse(value.string)
+        # end
+      end
+
+
+  module Meta
+    include JSON::Serializable
+    include JSON::Serializable::Fake
+
+      # The `type` should match the catalog type.
+      getter type : ContentType
+
+      # You can use any unique string for the `id`.
+      # In this case we use the corresponding IMDB ID.
+      # Stremio features an system add-on called Cinemeta.
+      # This add-on provides detailed metadata for any movie or
+      # TV show that matches a valid IMDB ID.
+      #
+      # NOTE: All IMDB ID's begin with 'tt' (ie: tt0032138)
+      property id : String
+
+      # Depending on if it's MetaPreview or Meta, these fields
+      # may or may not be optional
+      # property name : String
+      # property poster : URI
+
+      enum PosterShape
+        Square    # 1:1 aspect ratio
+        Poster    # 1:0.675 aspect ratio (IMDb poster type)
+        Landscape # 1:1.77 aspect ratio
+      end
+      property posterShape : PosterShape
+
+      #### Additional Parameters that are used for the Discover Page Sidebar:
+
+      # The `genre` is just a human-readable descriptive field
+      # TODO: Instead of an Array(String) it should be a generic Array(Enum-of-Genres)
+      @[JSON::Field(ignore: true)]
+      property genre : Array(String)
+      @[JSON::FakeField(suppress_key: true)]
+      def genre(json : ::JSON::Builder) : Nil
+        # We want `genre` to only appear, if the Array is non-empty
+        genre.to_json json unless genre.empty?
+      end
+
+      class Link
+        include JSON::Serializable
+
+        # **required** - string, human readable name for the link
+        property name : String
+
+        # **required** - string, any unique category name, links are grouped based on their category, some recommended categories are: `actor`, `director`, `writer`, while the following categories are reserved and should not be used: `imdb`, `share`, `similar`
+        property category : String
+
+        # built-in supported Categories
+        enum Category
+          Directors
+#          Writers
+#          Cast
+          Genres
+        end
+
+        # **required** - string, an external URL or [``Meta Link``](./meta.links.md)
+        @[JSON::Field(converter: Stremio::Addon::DevKit::Mixins::URIConverter)]
+        property url : URI
+
+        def initialize(@name, category, @url)
+          @category = category.to_s
+        end
+
+        def initialize(@name, category : Category)
+          @category = category.to_s
+
+          case category
+          when Category::Directors
+            # TODO url encode the name
+            @url = URI.parse("stremio:///search?search=#{@name}")
+          when Category::Genres
+            @url = URI.parse("stremio:///discover/https%3A%2F%2Fv3-cinemeta.strem.io%2Fmanifest.json/movie/top?genre=#{@name}")
+          end
+        end
+      end
+      property links : Array(Link)
+
+      def initialize(@id : String, @name : String, @poster : URI, @posterShape = PosterShape::Poster)
+        @genre = Array(String).new
+        @type = ContentType::Movie
+        @links = Array(Link).new
+      end
+
+  end
+end
