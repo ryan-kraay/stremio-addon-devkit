@@ -50,7 +50,7 @@ module Stremio::Addon::DevKit
         Poster    # 1:0.675 aspect ratio (IMDb poster type)
         Landscape # 1:1.77 aspect ratio
       end
-      property posterShape : PosterShape = PosterShape::Poster
+      property posterShape : PosterShape
 
       #### Additional Parameters that are used for the Discover Page Sidebar:
 
@@ -64,7 +64,7 @@ module Stremio::Addon::DevKit
         genre.to_json json unless genre.empty?
       end
 
-      def initialize(@id : String, @name : String, @poster : URI)
+      def initialize(@id : String, @name : String, @poster : URI, @posterShape = PosterShape::Poster)
         @genre = Array(String).new
         @type = ContentType::Movie
       end
