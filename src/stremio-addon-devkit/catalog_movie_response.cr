@@ -64,9 +64,49 @@ module Stremio::Addon::DevKit
         genre.to_json json unless genre.empty?
       end
 
+      class Link
+        include JSON::Serializable
+
+        # **required** - string, human readable name for the link
+        property name : String
+
+        # **required** - string, any unique category name, links are grouped based on their category, some recommended categories are: `actor`, `director`, `writer`, while the following categories are reserved and should not be used: `imdb`, `share`, `similar`
+        property category : String
+
+        # built-in supported Categories
+        enum Category
+          Directors
+#          Writers
+#          Cast
+          Genres
+        end
+
+        # **required** - string, an external URL or [``Meta Link``](./meta.links.md)
+        @[JSON::Field(converter: Stremio::Addon::DevKit::CatalogMovieResponse::MetaPreview::URIConverter)]
+        property url : URI
+
+        def new(@name, category, @url)
+          @category = category.to_s
+        end
+
+        def new(@name, category : Category)
+          @category = category.to_s
+
+          case category
+          when Category::Directors
+            # TODO url encode the name
+            @url = URI.parse("stremio:///search?search=#{@name}")
+          when Category::Genres
+            @url = URI.parse("stremio:///discover/https%3A%2F%2Fv3-cinemeta.strem.io%2Fmanifest.json/movie/top?genre=#{@name}")
+          end
+        end
+      end
+      property links : Array(Link)
+
       def initialize(@id : String, @name : String, @poster : URI, @posterShape = PosterShape::Poster)
         @genre = Array(String).new
         @type = ContentType::Movie
+        @links = Array(Link).new
       end
 
       # Adds custom handling of the to/from json for URI objects
