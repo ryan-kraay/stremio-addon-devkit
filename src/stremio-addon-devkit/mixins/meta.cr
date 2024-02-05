@@ -99,22 +99,38 @@ module Stremio::Addon::DevKit::Mixins
       end
     end
 
+    @[JSON::Field(ignore: true)]
     property links : Array(Link)
+    @[JSON::FakeField(suppress_key: true)]
+    def links(json : ::JSON::Builder ) : Nil
+      json.field "links" do
+        @links.to_json json
+      end unless @links.empty?
+    end
 
     # ``director``, ``cast`` - _optional_  - directors and cast, both arrays of names (string) (warning: this will soon be deprecated in favor of ``links``)
     macro link_legacy(key, category)
       category = {{ category }}.to_s
+      array_open : Bool = false
 
-      json.field {{ key.id.stringify }} do
-        json.array do
-          @links.select do |link|
-            # String comparisons are certainly slower than comparing enumeration
-            # types, but the flexibility we gain by using strings will (hopefully)
-            # make-up for it
-            link.category == category
-          end.each do |link|
-            link.name.to_json json
+      begin
+        @links.select do |link|
+          # String comparisons are certainly slower than comparing enumeration
+          # types, but the flexibility we gain by using strings will (hopefully)
+          # make-up for it
+          link.category == category
+        end.each do |link|
+          if array_open == false
+            # We want to only show our field/array *if* there is a matching value
+            json.string {{ key.id.stringify }}
+            json.start_array
+            array_open = true
           end
+          link.name.to_json json
+        end
+      ensure
+        if array_open
+          json.end_array
         end
       end
     end
