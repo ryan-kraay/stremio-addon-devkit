@@ -31,6 +31,11 @@ module Stremio::Addon::DevKit
       @[JSON::Field(converter: Stremio::Addon::DevKit::Mixins::URIConverter)]
       property poster : URI
 
+      def initialize(@id : String, @name : String, @poster : URI, @posterShape = PosterShape::Poster)
+        @genre = Array(String).new
+        @type = ContentType::Movie
+        @links = Array(Link).new
+      end
     end
 
     property metas : Array(MetaPreview)
