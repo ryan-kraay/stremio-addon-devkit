@@ -22,6 +22,8 @@ module Stremio::Addon::DevKit::Mixins
     Directors
     Writers
     Cast
+
+    Genres
   end
 
   module Meta
@@ -54,16 +56,6 @@ module Stremio::Addon::DevKit::Mixins
 
     #### Additional Parameters that are used for the Discover Page Sidebar:
 
-    # The `genre` is just a human-readable descriptive field
-    # TODO: Instead of an Array(String) it should be a generic Array(Enum-of-Genres)
-    @[JSON::Field(ignore: true)]
-    property genre : Array(String)
-    @[JSON::FakeField(suppress_key: true)]
-    def genre(json : ::JSON::Builder) : Nil
-      # We want `genre` to only appear, if the Array is non-empty
-      genre.to_json json unless genre.empty?
-    end
-
     class Link
       include JSON::Serializable
 
@@ -93,9 +85,14 @@ module Stremio::Addon::DevKit::Mixins
       @category = LinkCategory::Cast.to_s
     end
     class LinkGenre < Link
-      def initialize(@name)
-        @category = "genres"
-        @url = URI.parse("stremio:///discover/https%3A%2F%2Fv3-cinemeta.strem.io%2Fmanifest.json/movie/top?genre=#{@name}")
+      # * `catalogAddonUrl` - URL to manifest of the addon (URI encoded)
+      # * `type` the addon type, see [content types](./api/responses/content.types.md)
+      # * `id` [catalog id](./api/responses/manifest.md#catalog-format) from the addon
+      # * `genre` the filter genre, see [catalog extra properties](./api/responses/manifest.md#extra-properties)
+      def initialize(genre, content_type, id : String, catalogAddonUrl : URI)
+        @name = genre
+        @category = LinkCategory::Genres.to_s
+        @url = URI.parse("stremio:///discover/#{URI.encode_path_segment catalogAddonUrl.to_s}/#{content_type.to_s}/#{id}?genre=#{genre}")
       end
     end
 
@@ -133,6 +130,11 @@ module Stremio::Addon::DevKit::Mixins
           json.end_array
         end
       end
+    end
+    # The `genre` is just a human-readable descriptive field
+    @[JSON::FakeField(suppress_key: true)]
+    def genre(json : ::JSON::Builder ) : Nil
+      link_legacy(:genre, LinkCategory::Genres)
     end
     @[JSON::FakeField(suppress_key: true)]
     def director(json : ::JSON::Builder ) : Nil

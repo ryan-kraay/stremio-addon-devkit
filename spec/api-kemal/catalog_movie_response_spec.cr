@@ -15,7 +15,9 @@ Spectator.describe Stremio::Addon::DevKit::CatalogMovieResponse do
         "tt0017136",
         "Metropolis",
         URI.parse("https://images.metahub.space/poster/medium/tt0017136/img")) do |meta|
-          meta.genre = ["Drama", "Sci-Fi"]
+          ["Drama", "Sci-Fi"].each do |genre|
+            meta.links << DevKit::CatalogMovieResponse::MetaPreview::LinkGenre.new(genre, "movie", "top", URI.parse("http://localhost"))
+          end
         end
     end
   }
