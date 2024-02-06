@@ -15,10 +15,10 @@ Spectator.describe Stremio::Addon::DevKit::CatalogMovieResponse do
         "tt0017136",
         "Metropolis",
         URI.parse("https://images.metahub.space/poster/medium/tt0017136/img")) do |meta|
-          ["Drama", "Sci-Fi"].each do |genre|
-            meta.links << DevKit::CatalogMovieResponse::MetaPreview::LinkGenre.new(genre, "movie", "top", URI.parse("http://localhost"))
-          end
+        ["Drama", "Sci-Fi"].each do |genre|
+          meta.links << DevKit::CatalogMovieResponse::MetaPreview::LinkGenre.new(genre, "movie", "top", URI.parse("http://localhost"))
         end
+      end
     end
   }
   it "can be constructed" do

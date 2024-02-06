@@ -2,7 +2,6 @@ require "./spec_helper"
 require "../../src/stremio-addon-devkit/catalog_movie_response"
 
 Spectator.describe Stremio::Addon::DevKit::CatalogMoiveResponse::MetaPreview do
-
   alias Meta = Stremio::Addon::DevKit::CatalogMovieResponse::MetaPreview
   alias ContentType = Stremio::Addon::DevKit::ContentType
 
@@ -24,12 +23,12 @@ Spectator.describe Stremio::Addon::DevKit::CatalogMoiveResponse::MetaPreview do
 
     it "populates Meta#director" do
       sub = Meta.build(id: "tt15398776",
-                name: "Oppenheimer",
-                poster: URI.parse("https://127.0.0.1/example.png")) do |meta|
-              meta.links << subject
-            end
+        name: "Oppenheimer",
+        poster: URI.parse("https://127.0.0.1/example.png")) do |meta|
+        meta.links << subject
+      end
 
-      sub_json = String.new()
+      sub_json = String.new
       expect do
         sub_json = sub.to_json
       end.to_not raise_error
@@ -46,7 +45,7 @@ Spectator.describe Stremio::Addon::DevKit::CatalogMoiveResponse::MetaPreview do
     let(expected_genre) { "History" }
     let(expected_category) { "Genres" }
     let(expected_url) { "stremio:///discover/https%3A%2F%2Fv3-cinemeta.strem.io%2Fmanifest.json/movie/top?genre=History" }
-    subject { Meta::LinkGenre.new(expected_genre, ContentType::Movie, "top",  URI.parse("https://v3-cinemeta.strem.io/manifest.json")) }
+    subject { Meta::LinkGenre.new(expected_genre, ContentType::Movie, "top", URI.parse("https://v3-cinemeta.strem.io/manifest.json")) }
 
     it "generates proper parameters" do
       expect(subject.name).to eq expected_genre
@@ -60,12 +59,12 @@ Spectator.describe Stremio::Addon::DevKit::CatalogMoiveResponse::MetaPreview do
 
     it "populates Meta#genre" do
       sub = Meta.build(id: "tt15398776",
-                name: "Oppenheimer",
-                poster: URI.parse("https://127.0.0.1/example.png")) do |meta|
-              meta.links << subject
-            end
+        name: "Oppenheimer",
+        poster: URI.parse("https://127.0.0.1/example.png")) do |meta|
+        meta.links << subject
+      end
 
-      sub_json = String.new()
+      sub_json = String.new
       expect do
         sub_json = sub.to_json
       end.to_not raise_error
@@ -77,7 +76,5 @@ Spectator.describe Stremio::Addon::DevKit::CatalogMoiveResponse::MetaPreview do
       expect(result["genre"]?).to_not be_nil
       expect(result["genre"].as_a).to contain_exactly(expected_genre).in_order
     end
-
   end
-
 end

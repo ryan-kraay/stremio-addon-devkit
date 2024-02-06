@@ -132,7 +132,7 @@ Spectator.describe Stremio::Addon::DevKit::ManifestHandler do
                                               "id": "tt0032138",
                                               "posterShape": "poster",
                                               "name": "The Wizard of Oz",
-                                              "poster": "https://images.metahub.space/poster/medium/tt0032138/img" }]}.to_json)
+                                              "poster": "https://images.metahub.space/poster/medium/tt0032138/img"}]}.to_json)
     end
   end
 

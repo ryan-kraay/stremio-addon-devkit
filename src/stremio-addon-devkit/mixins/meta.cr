@@ -3,9 +3,7 @@ require "json-serializable-fake"
 require "uri"
 require "../content_type"
 
-
 module Stremio::Addon::DevKit::Mixins
-
   # Adds custom handling of the to/from json for URI objects
   module URIConverter
     def self.to_json(uri : URI, json : JSON::Builder) : Nil
@@ -54,7 +52,7 @@ module Stremio::Addon::DevKit::Mixins
     end
     property posterShape : PosterShape
 
-    #### Additional Parameters that are used for the Discover Page Sidebar:
+    # ### Additional Parameters that are used for the Discover Page Sidebar:
 
     class Link
       include JSON::Serializable
@@ -75,15 +73,19 @@ module Stremio::Addon::DevKit::Mixins
         @url = URI.parse("stremio:///search?search=#{URI.encode_path_segment @name}")
       end
     end
+
     class LinkDirector < LinkSearchable
       @category = LinkCategory::Directors.to_s
     end
+
     class LinkWriter < LinkSearchable
       @category = LinkCategory::Writers.to_s
     end
+
     class LinkCast < LinkSearchable
       @category = LinkCategory::Cast.to_s
     end
+
     class LinkGenre < Link
       # * `catalogAddonUrl` - URL to manifest of the addon (URI encoded)
       # * `type` the addon type, see [content types](./api/responses/content.types.md)
@@ -99,7 +101,7 @@ module Stremio::Addon::DevKit::Mixins
     @[JSON::Field(ignore: true)]
     property links : Array(Link)
     @[JSON::FakeField(suppress_key: true)]
-    def links(json : ::JSON::Builder ) : Nil
+    def links(json : ::JSON::Builder) : Nil
       json.field "links" do
         @links.to_json json
       end unless @links.empty?
@@ -131,21 +133,25 @@ module Stremio::Addon::DevKit::Mixins
         end
       end
     end
+
     # The `genre` is just a human-readable descriptive field
     @[JSON::FakeField(suppress_key: true)]
-    def genre(json : ::JSON::Builder ) : Nil
+    def genre(json : ::JSON::Builder) : Nil
       link_legacy(:genre, LinkCategory::Genres)
     end
+
     @[JSON::FakeField(suppress_key: true)]
-    def director(json : ::JSON::Builder ) : Nil
+    def director(json : ::JSON::Builder) : Nil
       link_legacy(:director, LinkCategory::Directors)
     end
+
     @[JSON::FakeField(suppress_key: true)]
-    def writer(json : ::JSON::Builder ) : Nil
+    def writer(json : ::JSON::Builder) : Nil
       link_legacy(:writer, LinkCategory::Writers)
     end
+
     @[JSON::FakeField(suppress_key: true)]
-    def cast(json : ::JSON::Builder ) : Nil
+    def cast(json : ::JSON::Builder) : Nil
       link_legacy(:cast, LinkCategory::Cast)
     end
   end
