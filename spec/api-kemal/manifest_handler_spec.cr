@@ -115,7 +115,7 @@ Spectator.describe Stremio::Addon::DevKit::ManifestHandler do
     it "converts a CatalogMovieResponse object into a valid http response" do
       router.route_catalogs(manifest) do |env, addon|
         DevKit::CatalogMovieResponse.build do |catalog|
-          catalog.metas << DevKit::CatalogMovieResponse::Meta.new(
+          catalog.metas << DevKit::CatalogMovieResponse::MetaPreview.new(
             "tt0032138",
             "The Wizard of Oz",
             URI.parse("https://images.metahub.space/poster/medium/tt0032138/img")
@@ -129,7 +129,10 @@ Spectator.describe Stremio::Addon::DevKit::ManifestHandler do
       expect(response.charset).to eq("utf-8")
       expect(response.headers["access-control-allow-origin"]).to eq("*")
       expect(response.body).to eq({"metas": [{"type": "movie",
-                                              "name": "The Wizard of Oz", "poster": "https://images.metahub.space/poster/medium/tt0032138/img", "id": "tt0032138"}]}.to_json)
+                                              "id": "tt0032138",
+                                              "posterShape": "poster",
+                                              "name": "The Wizard of Oz",
+                                              "poster": "https://images.metahub.space/poster/medium/tt0032138/img"}]}.to_json)
     end
   end
 
